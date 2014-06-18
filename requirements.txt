@@ -1,1 +1,4 @@
 ouimeaux
+ipython
+tornado
+pyzmq
