@@ -1,0 +1,7 @@
+1. Following packages must be installed:
+   * python, pip, virtualenv
+   * python-dev
+   * build-essential
+
+2. $ virtualenv ve
+3. pip install -r requirements.txt
