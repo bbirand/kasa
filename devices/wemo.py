@@ -1,7 +1,21 @@
 from ouimeaux.environment import Environment
 from ouimeaux.signals import statechange, receiver
 
-class WeMoSwitch(object):
+from IPython.html import widgets # Widget definitions
+from IPython.utils.traitlets import Bool # Used to declare attributes of our 
+
+class WeMoServer(object):
+    '''
+    Base class for running the server for listening and sending
+    commands to WeMo devices. Registers a base handler for all the incoming 
+    packets, and exposes several signals for interested parties.
+    If there aren't any devices listening to WeMo communications, then
+    the server is closed
+    '''
+    pass
+
+#class WeMoSwitch(object):
+class WeMoSwitch(widgets.CheckboxWidget):
     ''' Our implementation of a WeMo Switch '''
 
     @staticmethod
@@ -53,12 +67,17 @@ class WeMoSwitch(object):
         Takes as input a ouimeaux switch object
         '''
         self.switch = asw
+        self.on_trait_change(self.on_value_change, 'value')
+        self.description = asw.name
+        self.value = True
 
     def on(self):
         self.switch.on()
+        self.value = True
 
     def off(self):
         self.switch.off()
+        self.value = False
 
     def state(self):
         return self.switch.getstate()
@@ -81,3 +100,14 @@ class WeMoSwitch(object):
             statechange.connect(new_func, **kwargs)
             return new_func
         return _decorator
+
+    #
+    # IPython stuff
+    #
+    def on_value_change(self, name, value):
+        if value:
+            self.on()
+        else:
+            self.off()
+        #print(value)
+        #print(self.value)
