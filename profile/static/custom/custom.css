@@ -1,0 +1,22 @@
+/*
+Placeholder for custom user CSS
+
+mainly to be overridden in profile/static/custom/custom.css
+
+This will always be an empty file in IPython
+*/
+
+/* 
+ * Sensor Widget Styling
+ */
+div.sensor {
+   padding:10px;
+   border: 1px solid black;
+   text-align: center;
+}
+
+div.sensor span.value {
+   font-size:1.7em;
+   font-weight: bold;
+   color: red;
+}
