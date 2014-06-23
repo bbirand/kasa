@@ -6,10 +6,24 @@ mainly to be overridden in profile/static/custom/custom.css
 This will always be an empty file in IPython
 */
 
+
+/*
+ * WeMo Switch styling
+ */
+div.wemo {
+   height:70px;
+   text-align: center;
+   min-width: 70px;
+   padding: 10px;
+   border: 1px solid black;
+}
+
 /* 
  * Sensor Widget Styling
  */
 div.sensor {
+   height:70px;
+   width: 70px;
    padding:10px;
    border: 1px solid black;
    text-align: center;

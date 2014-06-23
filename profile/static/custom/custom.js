@@ -138,3 +138,53 @@ require(["widgets/js/widget"], function(WidgetManager){
     // Register the SensorView with the widget manager.
     WidgetManager.register_widget_view('SensorView', SensorView);
 });
+
+
+/*
+ * WeMo Switch Widget
+ */
+require(["widgets/js/widget"], function(WidgetManager) {
+
+    function display_content(w) {
+        astr = "<span class='description'>" + w.model.get('description') + "</span>";
+        astr += "<br/><span class='status'>";
+        if (w.model.get('value')) {
+            astr += 'On';  
+        }
+        else {
+            astr += 'Off';
+        }
+        astr += "</span>";
+        return astr
+    }
+    
+    var WeMoSwitchView = IPython.DOMWidgetView.extend({
+        render: function() {
+            console.log('render');
+            console.log(display_content(this));
+            // this.$el is an empty div in which we will style the control
+            this.$wemo_div = $('<div class="wemo">' + display_content(this) + '</div>')
+                              .appendTo(this.$el);
+        },
+
+        update: function() {
+            console.log('update');
+            this.$wemo_div.html(display_content(this));
+            return WeMoSwitchView.__super__.update.apply(this);
+        },
+        
+        // Tell Backbone to listen to the change event of input controls (which the HTML date picker is)
+        events: {"click": "handle_click"},
+        
+        // Callback for when the date is changed.
+        handle_click: function(event) {
+            this.model.set('value', !this.model.get('value'));
+            this.touch();
+        },
+    });
+    
+    // Register the WeMoSwitchView with the widget manager.
+    WidgetManager.register_widget_view('WeMoSwitchView', WeMoSwitchView);
+});
+ 
+

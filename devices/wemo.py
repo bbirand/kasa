@@ -1,8 +1,10 @@
 from ouimeaux.environment import Environment
 from ouimeaux.signals import statechange, receiver
 
-from IPython.html import widgets # Widget definitions
-from IPython.utils.traitlets import Bool # Used to declare attributes of our 
+from IPython.html import widgets
+from IPython.utils.traitlets import Bool, Unicode, Float, Int
+from devices.utils import AlignableWidget
+
 
 class WeMoServer(object):
     '''
@@ -14,10 +16,12 @@ class WeMoServer(object):
     '''
     pass
 
-#class WeMoSwitch(object):
-class WeMoSwitch(widgets.CheckboxWidget):
+class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
     ''' Our implementation of a WeMo Switch '''
-
+    _view_name = Unicode('WeMoSwitchView', sync=True)
+    value = Bool(sync=True)
+    description = Unicode(sync=True)
+    
     @staticmethod
     def discover():
         # Discover WeMo devices in the environment
@@ -52,7 +56,7 @@ class WeMoSwitch(widgets.CheckboxWidget):
         env.start()
         switch = env.get_switch(name)
 
-        # Make sure the server is closed
+        # Make sure the server is not listening
         env.upnp.server.stop()
         env.registry.server.stop()
 
@@ -62,14 +66,24 @@ class WeMoSwitch(widgets.CheckboxWidget):
     # Instance methods
     #
 
-    def __init__(self,asw):
+    def __init__(self,asw, description=None, **kwargs):
         '''
         Takes as input a ouimeaux switch object
         '''
+
+        # This must be done first so that the traitlet is recognized
+        # Otherwise, a new *instance* variable is created
+        super(widgets.DOMWidget, self).__init__(**kwargs)
+
         self.switch = asw
+        self.value = self.state()
+        if description:
+            self.description = description
+        else:
+            self.description = asw.name
+
+        # Callback for changing value
         self.on_trait_change(self.on_value_change, 'value')
-        self.description = asw.name
-        self.value = True
 
     def on(self):
         self.switch.on()
@@ -80,7 +94,21 @@ class WeMoSwitch(widgets.CheckboxWidget):
         self.value = False
 
     def state(self):
-        return self.switch.getstate()
+        return bool(self.switch.get_state())
+
+    #
+    # Change callback
+    #
+    def on_value_change(self, name, value):
+        ''' Implement change in value
+
+        When the value of the traitlet changes, make the appropriate
+        change to execute the new value
+        '''
+        if value:
+            self.on()
+        else:
+            self.off()
 
     #
     # Signals
@@ -101,13 +129,3 @@ class WeMoSwitch(widgets.CheckboxWidget):
             return new_func
         return _decorator
 
-    #
-    # IPython stuff
-    #
-    def on_value_change(self, name, value):
-        if value:
-            self.on()
-        else:
-            self.off()
-        #print(value)
-        #print(self.value)
