@@ -1,3 +1,7 @@
 ve/
 *pyc
 *swp
+
+#IPython notebook related stuff
+notebooks/.ipynb_checkpoints/
+profile/history.sqlite
