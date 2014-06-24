@@ -52,10 +52,16 @@
 //    console.log("Hellow from ipython");
 //});
 
-var full_design = true;
-
 function simplify_design(){
-    // Remove all the useless stuff
+
+    // Remove all stylesheets except 'custom.css'
+    $('head link, head style').each(function(){ 
+        if (this.href && this.href.indexOf('custom.css') < 0) { 
+            this.remove();
+        }
+    });
+
+    // Remove some of the unnecessary elements
     $('div#maintoolbar').css('display','none');
     $('button.close').css('display','none');
     //$('div.input').css('display','none');
@@ -67,14 +73,13 @@ function simplify_design(){
 
     // Also remove border from selected cell
     $('div.cell.selected').css('border','none');
+}
 
-    /*
-    if (full_design == true) {
-       //$('div.input
-       full_design = false;
-    } else {
-    }
-    */
+function style_home() {
+    $('div#notebook_list div.list_item').each(function() {
+        this.find('span.item_name').html("yo");
+    });
+
 }
 
 //$([IPython.events]).on('notebook_loaded.Notebook', function(){
@@ -86,6 +91,9 @@ function simplify_design(){
 
 // Remove the unnecessary stuff as early as possible
 $(document).ready(function(){
+    if (document.location.pathname == "/tree" && document.location.search == "?hide") {
+      simplify_design();
+    }
 });
 
 $([IPython.events]).on('status_started.Kernel', function() {
