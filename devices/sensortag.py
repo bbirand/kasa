@@ -18,6 +18,7 @@
 
 import pexpect
 import sys
+import threading
 import gevent
 import time
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
@@ -61,33 +62,68 @@ class SensorTag(TemperatureWidget):
     def __init__(self, addr):
         ''' Construct with BT address '''
         self.bluetooth_adr = addr
+        self._continue_update = False     # Used by polling threads
         #TODO: Make sure that the device is reachable, complain otherwise
 
+        # Make sure to call the super constructor for traitlets
         super(SensorTag, self).__init__()
 
+        # When initiated take a first reading
+        self.read_temp()
+
     def read_temp(self):
-	    ''' Return the temperature in Celsius
+        ''' Return the temperature in Celsius
         Uses gatttool via the pexpect package
         '''
 
-	    tool = pexpect.spawn('gatttool -b ' + self.bluetooth_adr + ' --interactive')
-	    tool.expect('\[LE\]>')
-	    #print "Preparing to connect. You might need to press the side button..."
-	    tool.sendline('connect')
-	    # test for success of connect
-	    tool.expect('\[CON\].*>')
-	    tool.sendline('char-write-cmd 0x29 01')
-	    tool.expect('\[LE\]>')
-	    gevent.sleep(1)
-	    tool.sendline('char-read-hnd 0x25')
-	    tool.expect('descriptor: .*') 
-	    rval = tool.after.split()
-	    objT = self.floatfromhex(rval[2] + rval[1])
-	    ambT = self.floatfromhex(rval[4] + rval[3])
-	    #print rval
-	    self.value = self.calcTmpTarget(objT, ambT)
-	    tool.close()
-	    return self.value
+        tool = pexpect.spawn('gatttool -b ' + self.bluetooth_adr + ' --interactive')
+        tool.expect('\[LE\]>')
+        #print "Preparing to connect. You might need to press the side button..."
+        tool.sendline('connect')
+        # test for success of connect
+        tool.expect('\[CON\].*>')
+        tool.sendline('char-write-cmd 0x29 01')
+        tool.expect('\[LE\]>')
+        gevent.sleep(1)
+        tool.sendline('char-read-hnd 0x25')
+        tool.expect('descriptor: .*') 
+        rval = tool.after.split()
+        tool.close()
+        objT = self.floatfromhex(rval[2] + rval[1])
+        ambT = self.floatfromhex(rval[4] + rval[3])
+
+        #TODO Add lock/semaphore for writing this value
+        self.value = self.calcTmpTarget(objT, ambT)
+        return self.value
+
+    def update_every(self, secs=5):
+        ''' Update the temperature every x secs
+        Default period is 5 seconds.
+        '''
+        self._continue_update = True
+        #self._continue_update_lock = threading.Lock()
+        def poller():
+            while True:
+                # If we are notified that we need to exit, finish
+                if not self._continue_update:
+                    break
+
+                #Otherwise, update the value
+                self.read_temp()
+                gevent.sleep(secs)
+
+        # Must run this in a new thread so that it can coexist with the IPython code
+        t = threading.Thread(target=poller).start()
+
+        # Keep reference to the thread to be able to kill it later
+        self._poller = t
+
+    def stop_poll(self):
+        ''' Stop updating the SensorTag '''
+        self._continue_update = False
+        #To make sure that the thread doesn't hang?
+        #self._poller.join()
+
 
 if __name__=="__main__":
 	s = SensorTag("BC:6A:29:AE:CC:73") 

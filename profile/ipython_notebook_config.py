@@ -48,7 +48,8 @@ c.NotebookApp.open_browser = False
 # c.NotebookApp.log_datefmt = '%Y-%m-%d %H:%M:%S'
 
 # The port the notebook server will listen on.
-# c.NotebookApp.port = 8888
+#c.NotebookApp.port = 8888
+c.NotebookApp.port = 80
 
 # Whether to overwrite existing config files when copying
 # c.NotebookApp.overwrite = False
@@ -71,7 +72,8 @@ c.NotebookApp.enable_mathjax = False
 # c.NotebookApp.base_url = '/'
 
 # The directory to use for notebooks and kernels.
-c.NotebookApp.notebook_dir = u'/Users/wimnet/kasa/notebooks'
+#c.NotebookApp.notebook_dir = u'/Users/wimnet/kasa/notebooks'
+c.NotebookApp.notebook_dir = u'/home/pi/kasa/notebooks/'
 
 # 
 # c.NotebookApp.file_to_run = ''
