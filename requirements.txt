@@ -1,4 +1,9 @@
-ouimeaux
 ipython
 tornado
 pyzmq
+
+# for wemo module
+ouimeaux
+
+# for sensortag module
+pexpect
