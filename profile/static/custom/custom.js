@@ -112,7 +112,7 @@ $([IPython.events]).on('status_started.Kernel', function() {
 require(["widgets/js/widget"], function(WidgetManager){
 
     function display_content(w) {
-       return '<span class="value">'+ w.model.get('value') + '</span><span class="unit">' +
+       return '<span class="value">'+ w.model.get('value').toFixed(2) + '</span><span class="unit">' +
               w.model.get('sensor_unit') + '</span><br/><span class="type">' + 
               w.model.get('sensor_type') + '</span>'
     }
