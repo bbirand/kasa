@@ -195,4 +195,27 @@ require(["widgets/js/widget"], function(WidgetManager) {
     WidgetManager.register_widget_view('WeMoSwitchView', WeMoSwitchView);
 });
  
+// Custom widget code for Foscam
+require(["widgets/js/widget"], function(WidgetManager){
+
+    function display_content(w) {
+       return '<iframe width="640" height="480" frameborder="0" src="http://'+ w.model.get('ip_address') + '/live.htm" name="main" scrolling="auto" marginwidth="0" marginheight="0"></iframe>'
+    }
+    
+    var FoscamView = IPython.DOMWidgetView.extend({
+        render: function(){
+            // this.$el is an empty div in which we will style the controle
+            this.$foscam_div = $('<div class="foscam">' + display_content(this) 
+                                + '</div>')
+                                 .appendTo(this.$el);
+        },
+
+        update: function() {
+            this.$foscam_div.html(display_content(this));
+            return FoscamView.__super__.update.apply(this);
+        },
+    });
+    
+    WidgetManager.register_widget_view('FoscamView', FoscamView);
+});
 
