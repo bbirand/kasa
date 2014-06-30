@@ -96,6 +96,62 @@ class SensorTag(TemperatureWidget):
         self.value = self.calcTmpTarget(objT, ambT)
         return self.value
 
+    def stop_plotly(self, secs=5):
+        ''' Send a notice to the thread to stop plotly stream'''
+        self._continue_plotly = False
+
+    def plot_plotly(self, secs=5):
+        ''' Send values to Plotly 
+
+        Every x seconds.
+        '''
+        self._continue_plotly = True
+
+        def poller():
+            import plotly.tools as tls   
+            import plotly.plotly as py  
+            from plotly.graph_objs import Data, Layout, Figure
+            from plotly.graph_objs import Scatter
+            from plotly.graph_objs import Stream
+
+            # Start the stream object
+            my_stream = Stream(token="wo0128zp8x",  # N.B. link stream id to 'token' key
+                               maxpoints=80)        # N.B. keep a max of 80 pts on screen
+
+            # Initialize trace of streaming plot by embedding the unique stream_id
+            my_data = Data([Scatter(x=[],
+                                    y=[],
+                                    mode='lines+markers',
+                                    stream=my_stream)]) # embed stream id, 1 per trace
+
+            # Add title to layout object
+            my_layout = Layout(title='Temperature Data')
+            # Make instance of figure object
+            my_fig = Figure(data=my_data, layout=my_layout)
+            # Initialize streaming plot, open new tab
+            unique_url = py.plot(my_fig, filename='temp')
+            print unique_url
+
+            # Open the stream
+            s = py.Stream("wo0128zp8x")
+            s.open()
+
+            # Where we will store the accumulating results
+            val = []
+
+            while True:
+                # Read the temperature
+                val.append(self.read_temp())
+                s.write(dict(x=range(len(val)),y=val))
+                gevent.sleep(secs)
+
+                # If we are done, close stream and exist
+                if not self._continue_plotly:
+                    s.close()
+                    break
+        # Must run this in a new thread so that it can coexist with the IPython code
+        self._plotly_poller = threading.Thread(target=poller).start()
+
     def update_every(self, secs=5):
         ''' Update the temperature every x secs
         Default period is 5 seconds.

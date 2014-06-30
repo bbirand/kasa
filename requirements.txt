@@ -7,3 +7,6 @@ ouimeaux
 
 # for sensortag module
 pexpect
+
+# for plotting
+plotly
