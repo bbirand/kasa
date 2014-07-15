@@ -1,0 +1,68 @@
+#!/bin/sh
+# Start running the Kasa server
+#
+### BEGIN INIT INFO
+# Provides: kasa
+# Required-Start: $network $remote_fs $syslog $time
+# Required-Stop: $network $remote_fs $syslog $time
+# Should-Start: $named slapd autofs ypbind nscd nslcd
+# Should-Stop: $named slapd autofs ypbind nscd nslcd
+# Default-Start: 2 3 4 5 
+# Default-Stop: 0 1 6
+# Short-Description: Kasa notebook server
+# Description: Starts Kasa IPython notebook server
+### END INIT INFO 
+
+NAME=kasa
+PIDFILE=/var/run/$NAME.pid
+
+case "$1" in
+start)
+    echo "Starting kasa"
+    # Make sure that the BT chip is up (if present?)
+    hciconfig hci0 up
+
+    # Start the IPython notebook
+    #PID=$(/home/pi/kasa/ve/bin/ipython notebook --profile-dir=/home/pi/kasa/profile 2>&1 >> /dev/null & echo $!)
+    /home/pi/kasa/ve/bin/ipython notebook --profile-dir=/home/pi/kasa/profile 2>&1 >> /dev/null &
+    PID=$!
+    #echo "PID is $PID"
+
+    if [ -z $PID ]; then
+	    printf "%s\n" "Fail"
+    else
+	    echo $PID > $PIDFILE
+	    printf "%s\n" "Ok"
+    fi
+
+;;
+
+stop)
+    echo "Stopping kasa"
+    hciconfig hci0 down
+
+    PID=$(cat $PIDFILE)
+    if [ -f $PIDFILE ]; then
+	    kill -HUP $PID
+	    printf "%s\n" "Ok"
+	    rm -f $PIDFILE
+    else
+	    printf "%s\n" "pidfile not found"
+    fi
+;;
+
+restart)
+  	$0 stop
+	$0 start
+;;
+
+*)
+    echo "Usage: /etc/init.d/kasa {start|stop|restart}"
+    exit 1
+;;
+
+esac
+
+exit 0
+
+
