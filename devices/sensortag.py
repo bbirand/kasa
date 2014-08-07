@@ -21,10 +21,42 @@ import sys
 import threading
 import gevent
 import time
+import re
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
-from .sensors import TemperatureWidget
+from sensors import TemperatureWidget
 
 class SensorTag(TemperatureWidget):
+    @staticmethod
+    def discover():
+
+        sensort_tags=[]
+
+        # Perform a scan using hcitool
+        c = pexpect.spawn('hcitool lescan')
+
+        # Keep scanning for items until timeout is reached
+        try:
+            while True:
+                c.expect(["(?P<MAC>BC:6A:[A-Z0-9:]+) (?P<name>.*)", pexpect.EOF], timeout=3)
+                # Add to found list
+                sensort_tags.append([SensorTag, c.match.group('MAC')])
+        except pexpect.TIMEOUT:
+            pass
+        finally:
+            c.close(force=True)
+
+        return sensort_tags
+
+    @staticmethod
+    def pretty_name():
+        ''' Name of the class '''
+        return "TI SensorTag"
+
+    @staticmethod
+    def get_device(name):
+        ''' Find the SensorTag device by MAC'''
+        return SensorTag(name) 
+
     def floatfromhex(self,h):
 	    ''' Convert to float form hex '''
 	    t = float.fromhex(h)
@@ -182,5 +214,6 @@ class SensorTag(TemperatureWidget):
 
 
 if __name__=="__main__":
-	s = SensorTag("BC:6A:29:AE:CC:73") 
-	print s.read_temp()
+    print SensorTag.discover()
+	#s = SensorTag("BC:6A:29:AE:CC:73") 
+	#print s.read_temp()

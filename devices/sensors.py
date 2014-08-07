@@ -3,7 +3,7 @@
 from IPython.html import widgets # Widget definitions
 from IPython.display import display # Used to display widgets in the notebook
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
-from devices.utils import AlignableWidget
+from utils import AlignableWidget
 
 class SensorWidget(widgets.DOMWidget, AlignableWidget):
     _view_name = Unicode('SensorView', sync=True)
