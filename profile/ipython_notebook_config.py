@@ -48,8 +48,8 @@ c.NotebookApp.open_browser = False
 # c.NotebookApp.log_datefmt = '%Y-%m-%d %H:%M:%S'
 
 # The port the notebook server will listen on.
-#c.NotebookApp.port = 8888
-c.NotebookApp.port = 80
+c.NotebookApp.port = 8888
+#c.NotebookApp.port = 80
 
 # Whether to overwrite existing config files when copying
 # c.NotebookApp.overwrite = False

@@ -25,7 +25,18 @@ import re
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
 from sensors import TemperatureWidget
 
-class SensorTag(TemperatureWidget):
+class SensorTag(object):
+    def __init__(self, addr):
+        ''' Construct with BT address '''
+        self._bluetooth_adr = addr
+
+        # Initiate all the sensors
+        self.temperature = SensorTagTemperature(self)
+
+
+    '''
+    Static Methods for discovery
+    '''
     @staticmethod
     def discover():
 
@@ -56,6 +67,58 @@ class SensorTag(TemperatureWidget):
     def get_device(name):
         ''' Find the SensorTag device by MAC'''
         return SensorTag(name) 
+
+
+    '''
+    Instance methods
+    '''
+    def read_value(self, ctrl_addr = '0x29', read_addr = '0x25', enable_cmd = '01', disable_cmd = '00' ):
+        ''' Uses the GATT interface to read a value
+
+        Establishes a connection via the GATT interface (and the gatttool command)
+        First writes `enable_cmd` to the address `ctrl_addr`
+        Then reads the value in `read_addr` (which is also returned)
+        Finally writes `disable_cmd` to `ctrl_addr`
+        '''
+
+        rval = ""
+        try:
+            gatt = pexpect.spawn('gatttool -b ' + self._bluetooth_adr + ' --interactive')
+            gatt.expect('\[LE\]>')
+            #print "Preparing to connect. You might need to press the side button..."
+            gatt.sendline('connect')
+            # test for success of connect
+            gatt.expect('\[CON\].*>', timeout=3)
+            gatt.sendline('char-write-cmd {} {}'.format(ctrl_addr, enable_cmd))
+            gatt.expect('\[LE\]>')
+            gevent.sleep(1)
+            gatt.sendline('char-read-hnd {}'.format(read_addr))
+            gatt.expect('descriptor: (?P<value>.*) \r\n') 
+            rval = gatt.match.group('value')
+            gatt.expect('\[LE\]>')
+            gatt.sendline('char-write-cmd {} {}'.format(ctrl_addr, disable_cmd))
+            gatt.expect('\[LE\]>')
+
+        except pexpect.TIMEOUT:
+            print "Cannot connect to device. Is it discoverable?"
+        finally:
+            gatt.close()
+
+        return rval
+
+class SensorTagTemperature(object):
+#class SensorTagTemperature(TemperatureWidget):
+    def __init__(self, sensortag):
+        ''' Construct with the object of the corresponding sensortag '''
+        self.sensortag = sensortag
+        self._continue_update = False     # Used by polling threads
+        #TODO: Make sure that the device is reachable, complain otherwise
+
+        # Make sure to call the super constructor for traitlets
+        super(SensorTagTemperature, self).__init__()
+
+        # When initiated take a first reading
+        self.read()
 
     def floatfromhex(self,h):
 	    ''' Convert to float form hex '''
@@ -91,42 +154,26 @@ class SensorTag(TemperatureWidget):
 	    #return "%.2f C" % tObj
 	    return tObj
 
-    def __init__(self, addr):
-        ''' Construct with BT address '''
-        self.bluetooth_adr = addr
-        self._continue_update = False     # Used by polling threads
-        #TODO: Make sure that the device is reachable, complain otherwise
-
-        # Make sure to call the super constructor for traitlets
-        super(SensorTag, self).__init__()
-
-        # When initiated take a first reading
-        self.read_temp()
-
-    def read_temp(self):
+    def read(self):
         ''' Return the temperature in Celsius
-        Uses gatttool via the pexpect package
+
+        Uses the read_value method of SensorTag with the appropriate addresses
         '''
 
-        tool = pexpect.spawn('gatttool -b ' + self.bluetooth_adr + ' --interactive')
-        tool.expect('\[LE\]>')
-        #print "Preparing to connect. You might need to press the side button..."
-        tool.sendline('connect')
-        # test for success of connect
-        tool.expect('\[CON\].*>')
-        tool.sendline('char-write-cmd 0x29 01')
-        tool.expect('\[LE\]>')
-        gevent.sleep(1)
-        tool.sendline('char-read-hnd 0x25')
-        tool.expect('descriptor: .*') 
-        rval = tool.after.split()
-        tool.close()
-        objT = self.floatfromhex(rval[2] + rval[1])
-        ambT = self.floatfromhex(rval[4] + rval[3])
+        rval = self.sensortag.read_value(ctrl_addr = '0x29', read_addr = '0x25', 
+                                         enable_cmd = '01', disable_cmd = '00').split()
 
-        #TODO Add lock/semaphore for writing this value
-        self.value = self.calcTmpTarget(objT, ambT)
-        return self.value
+        # Check if we returned a valid value
+        if rval != "":
+            objT = self.floatfromhex(rval[1] + rval[0])
+            ambT = self.floatfromhex(rval[3] + rval[2])
+
+            #TODO Add lock/semaphore for writing this value
+            self.value = self.calcTmpTarget(objT, ambT)
+            return self.value
+        else:
+            #TODO Raise an exception?
+            return None
 
     def stop_plotly(self, secs=5):
         ''' Send a notice to the thread to stop plotly stream'''
@@ -173,7 +220,7 @@ class SensorTag(TemperatureWidget):
 
             while True:
                 # Read the temperature
-                val.append(self.read_temp())
+                val.append(self.read())
                 s.write(dict(x=range(len(val)),y=val))
                 gevent.sleep(secs)
 
@@ -197,7 +244,7 @@ class SensorTag(TemperatureWidget):
                     break
 
                 #Otherwise, update the value
-                self.read_temp()
+                self.read()
                 gevent.sleep(secs)
 
         # Must run this in a new thread so that it can coexist with the IPython code
@@ -212,8 +259,10 @@ class SensorTag(TemperatureWidget):
         #To make sure that the thread doesn't hang?
         #self._poller.join()
 
-
 if __name__=="__main__":
-    print SensorTag.discover()
-	#s = SensorTag("BC:6A:29:AE:CC:73") 
-	#print s.read_temp()
+    #print SensorTag.discover()
+	#s = SensorTagTemperature(SensorTag("BC:6A:29:AE:CC:73"))
+	#print s.read()
+
+    s = SensorTag("BC:6A:29:AE:CC:73")
+    print s.temperature

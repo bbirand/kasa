@@ -2,6 +2,7 @@
    * python, pip, virtualenv
    * python-dev
    * build-essential
+   * lighttpd
 
 2. $ virtualenv ve
 3. pip install -r requirements.txt
