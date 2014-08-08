@@ -1,0 +1,89 @@
+@font-face {
+  font-family:'Adelle';
+  src:url('fonts/adelle.eot') format('embedded-opentype'),
+    url('fonts/adelle.woff') format('woff'),
+    url('fonts/adelle.ttf') format('truetype'),
+    url('fonts/adelle.svg') format('svg')
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+
+  /*font-family: 'PT Sans', sans-serif;*/
+  font-family: "Adelle",georgia,serif;
+}
+
+section#top-section {
+    font-size: 50px;
+    text-align: center;
+    min-height: 0px;
+}
+
+section#top-section h1 {
+    font-size:50px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+#top-home-image {
+  background-image: url("images/wizard_hat_blue.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -25px;
+  width: 200px;
+}
+
+#top-subtitle {
+    font-size: 18px;
+
+}
+
+section {
+    padding: 30px;
+    min-height: 500px;
+}
+
+section h2 {
+    font-size: 30px;
+
+}
+
+pre.code {
+    font-size:12px;
+    max-width: 550px;
+    margin:0 auto;
+}
+
+section p {
+    max-width: 450px;
+    margin: 20px auto;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+    padding-bottom: 30px;
+    font-weight: normal;
+}
+
+.color-a {
+  color: #3c6991;
+  /*color: #FFDC6B;
+  background-color: #342DA3;*/
+}
+
+.color-b {
+  background-color: #FFDC6B;
+  color: #342DA3;
+}
+
+.color-c {
+  background-color: #222;
+  color: #BCB9F1;
+}
+

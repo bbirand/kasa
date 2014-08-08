@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kasa - Control your devices</title>
+        <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="style.css" type="text/css" media="screen"title="no title" charset="utf-8"/>
+        
+    </head>
+    <body>
+
+        <section id="top-section" class='color-a'>
+        <div id="top-home-image"></div>
+        <h1>Kasa</h1>
+        <h3 id="top-subtitle">Kasa gives you the most powerful tools to control and analyze your home.</h3>
+        
+        </section>
+
+        <section class='color-c'>
+        <header>
+            <h1>Discover and Control Your Devices</h1>
+        </header>
+    <div class="container">
+    <div class="row">
+     <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
+        <p>Quick, interactive access to your devices</p>
+        <p> We support a growing number of devices that can be easily discovered, configured and made available. All of this is kept behind the scenes, so all you have to do is run the discover function from within your browser.</p>
+     </div>
+     <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
+        <pre class="code">
+# Discover supported devices in your home
+>>> kasa.discover()
+Type           Name
+----------------------------
+WeMo Switch   'AC'
+SensorTag     'Living Room'
+
+# Access power switch by name
+>>> ac = kasa['AC']
+>>> ac.on()
+WeMo Switch 'AC' turned on.
+
+# Access the temperature sensor
+>>> temp = kasa['Living Room'].temperature
+>>> printtemp
+'Living Room' temperature is 23.0C. 
+        </pre>
+    </div>
+    </div> <!-- div.row -->
+    </div>
+        </section>
+
+
+        <section class='color-b'>
+        <header>
+            <h2>Mobile Friendly By Design</h2>
+        </header>
+        <p> Cool! But ideally I want to access these devices from a smartphone or a tablet. </p>
+        <div class="container">
+        <div class="row">
+        <div class="col-md-4 col-md-offset-2" style="text-align:right;">
+           <h4> View from desktop browser </h3>
+            <p> Do your development interactively form the luxury of your fullscreen browser</p>
+           <img style="width:100%" src="images/kasa_macosx.png"/>
+        </div>
+        <div class="col-md-4" style="text-align: left;">
+           <h4> View from smartphone </h3>
+           <p>Access the site from mobile to monitor and control your devices</p>
+           <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
+        </div>
+
+        </div>
+        </div>
+
+        </section>
+
+
+        <section class='color-a'>
+        <header>
+            <h2>Powerful Interface for Writing Code</h2>
+        </header>
+    <div class="container">
+    <div class="row">
+     <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
+        <p> Great, I can turn control things via code or GUI. But how do I get these devices to work together to do something useful? </p>
+     </div>
+     <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
+        <pre class="code">
+# When temperature goes above 23C, turn on AC 
+>>> (temp > 23) | ac.on() 
+# Turn on AC at 6pm every day
+>>> when('6pm') | ac.on() 
+# Turn lights on/off randomly every 5 mins
+>>> every('5min')| random_binary() | ac.on() 
+        </pre>
+    </div>
+    </div>
+    </div>
+        </section>
+
+        <section class='color-c'>
+        <header>
+            <h2>Analyze Your Home</h2>
+        </header>
+        <p>Interface with the amazing Python scientific ecosystem</p>
+        <pre class="code">
+# Plot readings form sensor in real-time 
+>>> temp.plot()
+## Plot of the temperature, printed in IPython
+
+# Save readings every 15 seconds
+>>> temp.store('temp', every=15)
+
+# Read historical values
+>>> val = kasa.read('temp')
+# Pandas DataFrame for manipulating, plotting, histogramming, correlations, intro to scikit
+        </pre>
+        </section>
+
+        <section class='color-b'>
+        <header>
+            <h1>Supported Hardware</h1>
+        </header>
+        <p>
+        We fully support some hardware devices fully. Using these devices, it is super-easy to control them via an intuitive programming interface.</p>
+        <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2" style="text-align: center;">
+                <a href="http://www.ti.com/tool/cc2541dk-sensor">
+                <img style="width:50%" src="images/ti_sensortag.png"/>
+                </a>
+            </div>
+            <div class="col-md-4" style="text-align:center;">
+                <a href="www.amazon.com/dp/B00BB2MMNE/">
+                <img style="width:30%" src="images/wemo.png"/>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2" style="text-align:center;">
+                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope. It can function as an iBeacon transmitter, enabling you to do all sorts of cool things programmatically. It even has two configurable buttons.</p> 
+                <p>And all of this for $25. Batteries and shipment included!</p>
+            </div>
+            <div class="col-md-4" style="text-align:center;">
+                <p>The WeMo allows you to control most devices by turning their power on or off. It works especially well with cheap and old devices that have as little electronics as possible. Things like ACs, electric heaters, and kettles.</p>
+                <p> Costs $50 </p>
+            </div>
+        </div>
+        </div>
+        </section>
+
+
+      <section class='color-a'>
+      <header>
+         <h1>I'm Sold. What Do I Need?</h1>
+      </header>
+      <div class="container" style="max-width:600px">
+      <div class="row">
+          <div class="col-md-6" style="text-align: right;">
+              <img style="width:80%" src="images/raspberry_pi.png">
+          </div>
+          <div class="col-md-6">
+              <p>If you have a RaspberryPi, all you need to get started is our custom <a href="https://npmjs.org">image</a>. Burn it to an SD card, plug it in, and welcome to the world of Kasa!</p>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col-xs-12" text-align="left;">
+              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up!
+              </p>
+          </div>
+      </div>
+      <div class="row" style="text-align:center;">
+
+      <div class="col-md-4">
+          <img style="width:50%" src="images/pluggable_bt.png"/><br/>
+       <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">buy this from Amazon.com ($13)</a> <br>
+       <p> This is necessary for using the SensorTag.</p>
+       </p>
+      </div>
+
+      <div class="col-md-4">
+          <img style="width:50%" src="images/tp_link_wifi.png"/><br/>
+
+          <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
+      When you plug it in, you will have your own network called `kasa`.<br>
+      </div>
+
+      <div class="col-md-4">
+          <img style="width:50%" src="images/xbee_dongle.png"/><br/>
+
+          <p>For ZigBee, <a href="https://www.sparkfun.com/products/11697"> buy this from SparkFun ($25)</a>. You will also need to buy an XBee unit that is sold separately.</p>
+      </div>
+
+      </div><!-- row -->
+      </div><!-- container -->
+
+          <br>
+
+          <!--
+          <h3>Devices:</h3><br>
+
+          WeMo $(50)<br>
+          <ul>
+              <li>Control things that are plugged in to power</li>
+              <li></li>
+          -->
+    </section>
+
+
+        <section class='color-c'>
+        <header>
+            <h2>Your Home, Your Control</h2>
+        </header>
+        <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
+
+        <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+        </section>
+
+
+    </body>
+
+</html>
+
+
