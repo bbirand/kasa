@@ -100,7 +100,7 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-c'>
         <header>
-            <h2>Analyze Your Home</h2>
+            <h1>Analyze Your Home</h1>
         </header>
         <p>Interface with the amazing Python scientific ecosystem</p>
         <pre class="code">
@@ -114,6 +114,23 @@ WeMo Switch 'AC' turned on.
 # Read historical values
 >>> val = kasa.read('temp')
 # Pandas DataFrame for manipulating, plotting, histogramming, correlations, intro to scikit
+        </pre>
+        </section>
+
+        <section class='color-a'>
+        <header>
+            <h1>Social Features Included</h1>
+        </header>
+        <p>Create social applications with built-in integration with Twilio, Facebook, and Twitter.</p>
+        <pre class="code">
+# Post temperature on Twitter every day
+>>> temp.every('day') | twitter.post("The temperature outside is {}")
+
+# Let your friends know when you are home
+>>> motion_sensor | facebook.post("I just got home!")
+
+# Send text messages when something is wrong
+>>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")
         </pre>
         </section>
 
