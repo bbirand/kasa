@@ -3,22 +3,23 @@
     <head>
         <title>Kasa - Control your devices</title>
         <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <!--<link href="lib/animate.min.css" rel="stylesheet">-->
+        <link href="lib/animations.css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="style.css" type="text/css" media="screen"title="no title" charset="utf-8"/>
-        
+        <link href="style.css" rel="stylesheet" type="text/css" charset="utf-8"/>
     </head>
     <body>
 
-        <section id="top-section" class='color-a'>
-        <div id="top-home-image"></div>
-        <h1>Kasa</h1>
-        <h3 id="top-subtitle">Kasa gives you the most powerful tools to control and analyze your home.</h3>
+        <section id="top-section" class='color-a animatedParent animateOnce' data-sequence='300'>
+        <div class="animated fadeInDownShort" data-id='1' id="top-home-image"></div>
+        <h1 class="animated fadeInDownShort" data-id='2'>Kasa</h1>
+        <h3 class="animated fadeInDownShort" data-id='3' id="top-subtitle">Kasa gives you the most powerful tools to control and analyze your home.</h3>
         
         </section>
 
         <section class='color-c'>
         <header>
-            <h1>Discover and Control Your Devices</h1>
+            <h1 class="animated tada">Discover and Control Your Devices</h1>
         </header>
     <div class="container">
     <div class="row">
@@ -51,22 +52,22 @@ WeMo Switch 'AC' turned on.
         </section>
 
 
-        <section class='color-b'>
-        <header>
-            <h2>Mobile Friendly By Design</h2>
+        <section class='color-b' >
+        <header class="animatedParent">
+            <h1 class="animated fadeIn">Mobile Friendly By Design</h1>
         </header>
         <p> Cool! But ideally I want to access these devices from a smartphone or a tablet. </p>
         <div class="container">
-        <div class="row">
+        <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='600'>
         <div class="col-md-4 col-md-offset-2" style="text-align:right;">
            <h4> View from desktop browser </h3>
             <p> Do your development interactively form the luxury of your fullscreen browser</p>
-           <img style="width:100%" src="images/kasa_macosx.png"/>
+           <img class="animated fadeInLeftShort" data-id='1' style="width:100%" src="images/kasa_macosx.png"/>
         </div>
         <div class="col-md-4" style="text-align: left;">
            <h4> View from smartphone </h3>
            <p>Access the site from mobile to monitor and control your devices</p>
-           <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
+           <img class='animated fadeInRightShort' data-id='2' style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
         </div>
 
         </div>
@@ -100,7 +101,9 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-c'>
         <header>
-            <h1>Analyze Your Home</h1>
+          <div class='animatedParent'>
+              <h1 class='animated bounceInDown'>Analyze Your Home</h1>
+          </div>
         </header>
         <p>Interface with the amazing Python scientific ecosystem</p>
         <pre class="code">
@@ -139,7 +142,7 @@ WeMo Switch 'AC' turned on.
             <h1>Supported Hardware</h1>
         </header>
         <p>
-        We fully support some hardware devices fully. Using these devices, it is super-easy to control them via an intuitive programming interface.</p>
+        We fully support some hardware devices. Using these devices, it is super-easy to control them via an intuitive programming interface.</p>
         <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-2" style="text-align: center;">
@@ -236,8 +239,21 @@ WeMo Switch 'AC' turned on.
 
     <a href="https://github.com/bbirand/kasa"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
 
+    <script src="lib/jquery-2.1.1.min.js"></script> 
+    <script src="lib/css3-animate-it.js"></script> 
+
+    <!--
+    <script src="lib/jquery.viewportchecker.js"></script> 
+    <script>
+  jQuery(document).ready(function() {
+      jQuery('.toAnimateRight').addClass("hidden").viewportChecker({
+          classToAdd: 'visible animated fadeIn',
+          offset: 100
+         });
+  });
+    </script>
+    -->
+
     </body>
 
 </html>
-
-

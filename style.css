@@ -1,3 +1,11 @@
+.hidden{
+     opacity:0;
+}
+
+.visible{
+     opacity:1;
+}
+
 @font-face {
   font-family:'Adelle';
   src:url('fonts/adelle.eot') format('embedded-opentype'),
@@ -17,7 +25,7 @@ html, body {
 section#top-section {
     font-size: 50px;
     text-align: center;
-    min-height: 0px;
+    min-height: 400px;
 }
 
 section#top-section h1 {
