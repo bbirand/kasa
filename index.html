@@ -11,24 +11,25 @@
     <body>
 
         <section id="top-section" class='color-a animatedParent animateOnce' data-sequence='300'>
+        <div class='vertical-align'>
         <div class="animated fadeInDownShort" data-id='1' id="top-home-image"></div>
         <h1 class="animated fadeInDownShort" data-id='2'>Kasa</h1>
         <h3 class="animated fadeInDownShort" data-id='3' id="top-subtitle">Kasa gives you the most powerful tools to control and analyze your home.</h3>
-        
+        </div>
         </section>
 
         <section class='color-c'>
-        <header>
-            <h1 class="animated tada">Discover and Control Your Devices</h1>
+        <header class='animatedParent' data-appear-top-offset='-100'>
+            <h1 class="animated fadeInDownShort">Discover and Control Your Devices</h1>
         </header>
     <div class="container">
-    <div class="row">
+    <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
-        <p>Quick, interactive access to your devices</p>
-        <p> We support a growing number of devices that can be easily discovered, configured and made available. All of this is kept behind the scenes, so all you have to do is run the discover function from within your browser.</p>
+        <p class='animated fadeInDownShort' data-id='1'>Quick, interactive access to your devices</p>
+        <p class='animated fadeInDownShort' data-id='2'> We support a growing number of devices that can be easily discovered, configured and made available. All of this is kept behind the scenes, so all you have to do is run the discover function from within your browser.</p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
-        <pre class="code">
+        <pre class="code animated fadeInRightShort" data-id='3'>
 # Discover supported devices in your home
 >>> kasa.discover()
 Type           Name
@@ -53,21 +54,21 @@ WeMo Switch 'AC' turned on.
 
 
         <section class='color-b' >
-        <header class="animatedParent">
-            <h1 class="animated fadeIn">Mobile Friendly By Design</h1>
+        <header class="animatedParent" data-appear-top-offset='-100'>
+            <h1 class="animated fadeInDownShort">Mobile Friendly By Design</h1>
+            <p class="animated fadeInDownShort"> Cool! But I want to access these devices from a smartphone or a tablet. </p>
         </header>
-        <p> Cool! But ideally I want to access these devices from a smartphone or a tablet. </p>
         <div class="container">
-        <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='600'>
-        <div class="col-md-4 col-md-offset-2" style="text-align:right;">
+        <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='200'>
+        <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
            <h4> View from desktop browser </h3>
             <p> Do your development interactively form the luxury of your fullscreen browser</p>
-           <img class="animated fadeInLeftShort" data-id='1' style="width:100%" src="images/kasa_macosx.png"/>
+           <img style="width:100%" src="images/kasa_macosx.png"/>
         </div>
-        <div class="col-md-4" style="text-align: left;">
+        <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
            <h4> View from smartphone </h3>
            <p>Access the site from mobile to monitor and control your devices</p>
-           <img class='animated fadeInRightShort' data-id='2' style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
+           <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
         </div>
 
         </div>
@@ -77,16 +78,16 @@ WeMo Switch 'AC' turned on.
 
 
         <section class='color-a'>
-        <header>
-            <h2>Powerful Interface for Writing Code</h2>
+        <header class='animatedParent'>
+            <h1 class='animated fadeInDownShort'>Powerful Interface for Writing Code</h1>
         </header>
     <div class="container">
-    <div class="row">
+    <div class="row animatedParent" data-sequence='300'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
-        <p> Great, I can turn control things via code or GUI. But how do I get these devices to work together to do something useful? </p>
+        <p class='animated fadeInDownShort' data-id='1'> Great, I can turn control things via code or GUI. But how do I get these devices to work together to do something useful? </p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
-        <pre class="code">
+        <pre class='code animated fadeInDownShort' data-id='2'>
 # When temperature goes above 23C, turn on AC 
 >>> (temp > 23) | ac.on() 
 # Turn on AC at 6pm every day
@@ -243,14 +244,17 @@ WeMo Switch 'AC' turned on.
     <script src="lib/css3-animate-it.js"></script> 
 
     <!--
-    <script src="lib/jquery.viewportchecker.js"></script> 
     <script>
-  jQuery(document).ready(function() {
-      jQuery('.toAnimateRight').addClass("hidden").viewportChecker({
-          classToAdd: 'visible animated fadeIn',
-          offset: 100
-         });
-  });
+        $(function() {
+            console.log("initial height: " + $('#top-section').height());
+            console.log("window size : " + $(window).height());
+            console.log("initial scrollTop: " + $(document).scrollTop());
+        });
+        $(document).scroll(function() {
+            $('#top-section').height( $(window).height() - $(document).scrollTop() - 180 );
+            console.log( $(window).height() - $(document).scrollTop() );
+
+        });
     </script>
     -->
 

@@ -22,10 +22,18 @@ html, body {
   font-family: "Adelle",georgia,serif;
 }
 
+.vertical-align {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+
+}
+
 section#top-section {
     font-size: 50px;
     text-align: center;
     min-height: 400px;
+    height: 100%;
 }
 
 section#top-section h1 {
