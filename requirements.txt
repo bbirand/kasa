@@ -5,6 +5,9 @@ pyzmq
 # for wemo module
 ouimeaux
 
+# for running the commands
+supervisor
+
 # for sensortag module
 pexpect
 
