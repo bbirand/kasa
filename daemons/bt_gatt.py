@@ -175,12 +175,14 @@ def main():
     '''
     Server routine
     '''
-    port = "5556"
+    port = "9801"
     context = zmq.Context.instance()
 
-    # Receive input form the outside world
-    socket = context.socket(zmq.REP)
-    socket.bind("tcp://*:%s" % port)
+    # Receive input from the outside world
+    socket = context.socket(zmq.DEALER)
+    # Specify unique identity
+    socket.setsockopt(zmq.IDENTITY, b"GATT")
+    socket.connect("tcp://*:%s" % port)
 
     print "Ready to receive"
 
@@ -188,14 +190,16 @@ def main():
     worker_sockets = {}
 
     while True:
-        # Get the outside message
-        cmd = socket.recv().split()
-        print "Received request {}".format(cmd)
+        # Get the outside message in several parts
+        # Store the client_addr
+        client_addr, _, cmd = socket.recv_multipart()
+        print "Received request {} from '{}'".format(cmd, client_addr)
+        cmd = cmd.split(' ')
 
         # Return list of active connections
         if cmd[0] == 'active':
             active_socks = worker_sockets.keys()
-            socket.send(",".join(active_socks))
+            socket.send_multipart([client_addr, b'', ",".join(active_socks)])
             continue
 
         # Parse bluetooth address
@@ -209,7 +213,7 @@ def main():
         if commands[0] == 'connect':
             # Check if we're already connected (if so, don't do anything)
             if bluetooth_addr in worker_sockets:
-                socket.send(b'ok')
+                socket.send_multipart([client_addr, b'', b'ok'])
                 continue
 
             # Create socket to be shared with worker thread
@@ -225,10 +229,10 @@ def main():
             if stats == 'ok':
                 # Save the socket object if the call was successful
                 worker_sockets[bluetooth_addr] = worker
-                socket.send(b'ok')
+                socket.send_multipart([client_addr, b'', b'ok'])
             else:
                 # Connection is not successful
-                socket.send(b'error')
+                socket.send_multipart([client_addr, b'', b'error'])
 
         elif commands[0] == 'disconnect':
             # Send disconnect to thread, and close and remove the socket
@@ -237,11 +241,11 @@ def main():
             worker.send(b'disconnect')
             stats = worker.recv()
             if stats == 'ok':
-                socket.send(b'ok')
+                socket.send_multipart([client_addr, b'', b'ok'])
                 del worker_sockets[bluetooth_addr]
             else:
                 # Connection is not successful
-                socket.send(b'error')
+                socket.send_multipart([client_addr, b'', b'error'])
 
         else:
             # Fetch the right socket
@@ -251,6 +255,6 @@ def main():
             worker_result = worker.recv()
 
             # Relay reply to the original thread
-            socket.send(worker_result) 
+            socket.send_multipart([client_addr, b'', worker_result]) 
 
 if __name__=="__main__": main()

@@ -84,13 +84,14 @@ class SensorTag(object):
         connection socket it `self.socket`
         '''
         # Create local socket connection
-        port = "5556"
+        #port = "5556"
+        port = "9800"
         context = zmq.Context()
         self.socket = context.socket(zmq.REQ)
         self.socket.connect("tcp://localhost:%s" % port)
 
         # Send the connection command
-        self.socket.send(self._bluetooth_addr + ' connect')
+        self.socket.send('GATT ' + self._bluetooth_addr + ' connect')
         result = self.socket.recv()
         if result == 'ok':
             return True
@@ -108,7 +109,7 @@ class SensorTag(object):
         Finally writes `disable_cmd` to `ctrl_addr`
         '''
 
-        self.socket.send(self._bluetooth_addr + ' read_value {} {} {} {} {}'.format(ctrl_addr, read_addr, 
+        self.socket.send('GATT ' + self._bluetooth_addr + ' read_value {} {} {} {} {}'.format(ctrl_addr, read_addr, 
                                                         enable_cmd, disable_cmd, sleep_amount))
         result = self.socket.recv()
         #print "Got response: " + result
