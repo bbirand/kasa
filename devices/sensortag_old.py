@@ -61,6 +61,8 @@ class SensorTag(object):
         finally:
             c.close(force=True)
 
+        # TODO Query the BT daemon for active connections
+
         return sensort_tags
 
     @staticmethod
@@ -76,77 +78,6 @@ class SensorTag(object):
     '''
     Instance methods
     '''
-    @staticmethod
-    def _manager_greenlet(bluetooth_addr, q_in, q_out):
-        '''
-        Greenlet that establishes a connection and waits for input 
-        from the queues
-
-        The items on q_in should be tuples, where the first element is the command:
-        ('read',ctrl_add, read_addr, enable_cmd, disable_cmd)
-        ('quit')
-        '''
-        try:
-            gatt = pexpect.spawn('gatttool -b ' + bluetooth_addr + ' --interactive')
-            gatt.expect('\[LE\]>')
-            #print "Preparing to connect. You might need to press the side button..."
-            gatt.sendline('connect')
-            # test for success of connect
-            gatt.expect('\[CON\].*>', timeout=3)
-            # TODOSet switch to connected
-            q_out.put('ok')
-
-        except pexpect.TIMEOUT:
-            print "Cannot connect to device. Is it discoverable?"
-            gatt.close()
-            q_out.put('error')
-            return 
-
-        # At this point, we should be connected 
-        while True:
-            # Get the command
-            try:
-                cmd = q_in.get(timeout=120)
-            except gevent.queue.Empty:
-                # There were no items in the queue for 120 seconds
-                # Make sure that we're still connected
-                # TODO Check that the prompt says "CON", otherwise run the 
-                # "connect" command
-                continue
-
-            if cmd[0] == "read":
-                # Take a single reading
-                ctrl_addr, read_addr, enable_cmd, disable_cmd = cmd[1:]
-                gatt.sendline('char-write-cmd {} {}'.format(ctrl_addr, enable_cmd))
-                gatt.expect('\[LE\]>')
-                gevent.sleep(1)
-                gatt.sendline('char-read-hnd {}'.format(read_addr))
-                gatt.expect('descriptor: (?P<value>.*) \r\n') 
-                rval = gatt.match.group('value')
-                gatt.expect('\[LE\]>')
-                gatt.sendline('char-write-cmd {} {}'.format(ctrl_addr, disable_cmd))
-                q_out.put(rval)
-
-            elif cmd[0] == "quit":
-                print "Quitting greenlet"
-                break
-
-            elif cmd[0] == 'status':
-                try:
-                    gatt.sendline('  ')
-                    gatt.expect('\[CON\].*>', timeout=3)
-                    q_out.put(True)
-                except pexpect.TIMEOUT:
-                    print "Cannot connect to device."
-                    q_out.put(False)
-                    break
-            else:
-                #TODO What if don't recognize the command
-                pass
-
-        # Close the connection
-        gatt.close()
-
     def is_connected(self):
         ''' Check if we're connected
         '''
