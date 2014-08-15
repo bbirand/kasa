@@ -25,12 +25,13 @@ def st_connect(bluetooth_addr):
         raise IOError('Cannot connect')
 
 
-def st_read_value(gatt, ctrl_addr, read_addr, enable_cmd, disable_cmd):
+def st_read_value(gatt, ctrl_addr, read_addr, enable_cmd, disable_cmd, sleep_amount=0.3):
     '''
     Convenience funciton for enabling a reading, and then performing it
     '''
     st_write(gatt, ctrl_addr, enable_cmd)
-    time.sleep(0.3)   # Sleep so that we can have time to take the reading
+    #time.sleep(0.3)   # Sleep so that we can have time to take the reading
+    time.sleep(sleep_amount)   # Sleep so that we can have time to take the reading
     rval = st_read(gatt, read_addr)
     st_write(gatt, ctrl_addr, disable_cmd)
     return rval
@@ -151,8 +152,13 @@ def worker_thread(worker_url, bluetooth_addr, context=None):
 
         elif cmd[0] == 'read_value':
             # Make sure that we're connected
-            ctrl_addr, read_addr, enable_cmd, disable_cmd = cmd[1:]
-            rval = st_read_value(gatt, ctrl_addr, read_addr, enable_cmd, disable_cmd )
+            ctrl_addr, read_addr, enable_cmd, disable_cmd = cmd[1:5]
+
+            # Default amount to sleep between the readings
+            sleep_amount = 0.3
+            if len(cmd) == 6:
+                sleep_amount = float(cmd[5])
+            rval = st_read_value(gatt, ctrl_addr, read_addr, enable_cmd, disable_cmd, sleep_amount = sleep_amount)
             socket.send(rval)
             #TODO Send the reading via a PUB/SUB socket
 
