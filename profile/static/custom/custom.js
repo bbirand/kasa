@@ -112,6 +112,53 @@ $([IPython.events]).on('status_started.Kernel', function() {
 require(["widgets/js/widget"], function(WidgetManager){
 
     function display_content(w) {
+        str = '<div class="values">';
+        tuple = w.model.get('value');
+        for (x in tuple) {
+            str += '<span class="value">' + tuple[x].toFixed(2) + '</span>';
+            str += '<span class="unit">' + w.model.get('sensor_unit') + '</span><br/>';
+        }
+        str += '</div>';
+
+        str += '<span class="type">' + w.model.get('sensor_type') + '</span>';
+
+        return str;
+    }
+    
+    // Define the DatePickerView
+    var SensorView = IPython.DOMWidgetView.extend({
+        render: function(){
+            // this.$el is an empty div in which we will style the controle
+            this.$sensor_div = $('<div class="sensor">' + display_content(this) 
+                                + '</div>')
+                                 .appendTo(this.$el);
+        },
+
+        update: function() {
+            this.$sensor_div.html(display_content(this));
+            return SensorView.__super__.update.apply(this);
+        },
+        
+        /**        
+        // Tell Backbone to listen to the change event of input controls (which the HTML date picker is)
+        events: {"change": "handle_date_change"},
+        
+        // Callback for when the date is changed.
+        handle_date_change: function(event) {
+            this.model.set('value', this.$date.val());
+            this.touch();
+        },
+        */
+    });
+    // Register the SensorView with the widget manager.
+    WidgetManager.register_widget_view('TupleSensorView', SensorView);
+});
+
+
+// Custom widget code for SensorWidget
+require(["widgets/js/widget"], function(WidgetManager){
+
+    function display_content(w) {
        return '<span class="value">'+ w.model.get('value').toFixed(2) + '</span><span class="unit">' +
               w.model.get('sensor_unit') + '</span><br/><span class="type">' + 
               w.model.get('sensor_type') + '</span>'
@@ -142,10 +189,10 @@ require(["widgets/js/widget"], function(WidgetManager){
         },
         */
     });
-    
     // Register the SensorView with the widget manager.
-    WidgetManager.register_widget_view('SensorView', SensorView);
+    WidgetManager.register_widget_view('ScalarSensorView', SensorView);
 });
+
 
 
 /*

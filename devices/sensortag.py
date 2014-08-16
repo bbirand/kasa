@@ -11,8 +11,8 @@ import re
 from mixins import RegularUpdateMixin
 
 # GUI-related
-from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
-from sensors import TemperatureWidget
+from IPython.utils.traitlets import Unicode, Float, List
+from sensors import ScalarSensorWidget, TupleSensorWidget
 
 class SensorTag(object):
     def __init__(self, addr):
@@ -113,13 +113,18 @@ class SensorTag(object):
             #print "Got response: " + result
             return result
 
-class SensorTagMagnetometer(RegularUpdateMixin):
+class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
     '''
     Magnetometer device for TI SensorTag
 
     Upon construction, creates a connection to the SensorTag, and connects to it
 
     '''
+
+    # Needed for the GUI
+    sensor_type = Unicode("Compass", sync=True)
+    sensor_unit = Unicode("T", sync=True)
+
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
@@ -170,7 +175,12 @@ class SensorTagMagnetometer(RegularUpdateMixin):
             #TODO Raise an exception?
             return None
 
-class SensorTagTemperature(RegularUpdateMixin, TemperatureWidget):
+class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
+
+    # Needed for the GUI
+    sensor_type = Unicode("Amb. Temp", sync=True)
+    sensor_unit = Unicode("&#176;C", sync=True)
+
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
