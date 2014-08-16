@@ -16,6 +16,9 @@ class SensorTag(object):
         ''' Construct with BT address '''
         self._bluetooth_addr = addr
 
+        # Lock for coordinating device accesses
+        self._device_lock = threading.Lock()
+
         # Initiate a connection with the tag
         self._connect_to_tag()
 
@@ -75,22 +78,22 @@ class SensorTag(object):
         Tells it to connect to the bluetooth device, and save the
         connection socket it `self.socket`
         '''
-        # Create local socket connection
-        #port = "5556"
-        port = "9800"
-        context = zmq.Context()
-        self.socket = context.socket(zmq.REQ)
-        self.socket.connect("tcp://localhost:%s" % port)
+        with self._device_lock:
+            # Create local socket connection
+            port = "9800"
+            context = zmq.Context()
+            self.socket = context.socket(zmq.REQ)
+            self.socket.connect("tcp://localhost:%s" % port)
 
-        # Send the connection command
-        self.socket.send('GATT ' + self._bluetooth_addr + ' connect')
-        result = self.socket.recv()
-        if result == 'ok':
-            return True
-        elif result == 'error':
-            raise IOError('Cannot connect to device. Is it discoverable?')
-        else:
-            raise ValueError('Unexpected response received: ' + result)
+            # Send the connection command
+            self.socket.send('GATT ' + self._bluetooth_addr + ' connect')
+            result = self.socket.recv()
+            if result == 'ok':
+                return True
+            elif result == 'error':
+                raise IOError('Cannot connect to device. Is it discoverable?')
+            else:
+                raise ValueError('Unexpected response received: ' + result)
 
     def _read_value(self, ctrl_addr = '0x29', read_addr = '0x25', enable_cmd = '01', disable_cmd = '00' , sleep_amount = 0.3):
         ''' Uses the GATT interface to read a value
@@ -100,12 +103,12 @@ class SensorTag(object):
         Sleeps for `sleep_amount` time, then reads the value in `read_addr` (which is returned)
         Finally writes `disable_cmd` to `ctrl_addr`
         '''
-
-        self.socket.send('GATT ' + self._bluetooth_addr + ' read_value {} {} {} {} {}'.format(ctrl_addr, read_addr, 
-                                                        enable_cmd, disable_cmd, sleep_amount))
-        result = self.socket.recv()
-        #print "Got response: " + result
-        return result
+        with self._device_lock:
+            self.socket.send('GATT ' + self._bluetooth_addr + ' read_value {} {} {} {} {}'.format(ctrl_addr, read_addr, 
+                                                            enable_cmd, disable_cmd, sleep_amount))
+            result = self.socket.recv()
+            #print "Got response: " + result
+            return result
 
 class SensorTagMagnetometer(object):
     '''
@@ -125,7 +128,7 @@ class SensorTagMagnetometer(object):
         super(SensorTagMagnetometer, self).__init__()
 
         # When initiated take a first reading
-        self.read()
+        #self.read()
 
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''
@@ -174,7 +177,7 @@ class SensorTagTemperature(TemperatureWidget):
         super(SensorTagTemperature, self).__init__()
 
         # When initiated take a first reading
-        self.read()
+        #self.read()
 
     def calcTmpTarget(self, objT, ambT):
 	    '''
