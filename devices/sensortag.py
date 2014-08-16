@@ -8,6 +8,9 @@ import threading
 import time
 import re
 
+from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
+from sensors import TemperatureWidget
+
 class SensorTag(object):
     def __init__(self, addr):
         ''' Construct with BT address '''
@@ -173,8 +176,7 @@ class SensorTagMagnetometer(object):
             return None
 
 
-class SensorTagTemperature(object):
-#class SensorTagTemperature(TemperatureWidget):
+class SensorTagTemperature(TemperatureWidget):
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
