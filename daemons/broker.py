@@ -41,13 +41,6 @@ def main():
             cmds = msg.split(' ')
             target = cmds[0]   # First part is the target device
 
-            # Look-up to see if the device is a registered worker
-            # Send the response if there is an error
-            #if target not in registered_workers:
-            #    clients.send(client_addr, zmq.SNDMORE)
-            #    clients.send(b'', zmq.SNDMORE)
-            #    clients.send(b'unavailable')
-
             # If the worker is registered, send the message there
             # Also send the client address for the reply
             workers.send(target, zmq.SNDMORE)
