@@ -18,6 +18,9 @@ class RegularStoppableThread(threading.Thread):
         self.every = every
         self._stop = threading.Event()
 
+        # Used for recognizing our threads
+        self._is_kasa_thread = True
+
     def loop(self):
         raise NotImplemented("method loop must be implemented")
 
