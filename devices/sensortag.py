@@ -70,17 +70,6 @@ class SensorTag(object):
     '''
     Instance methods
     '''
-    def is_connected(self):
-        ''' Check if we're connected
-        '''
-        # the connect method
-        self._mgr_in.put(('status',))
-
-        try:
-            return self._mgr_out.get(timeout=5)
-        except gevent.queue.Empty:
-            return False
-
     def _connect_to_tag(self):
         '''Establishes a connection to the SensorTag BT Daemon
         Tells it to connect to the bluetooth device, and save the
