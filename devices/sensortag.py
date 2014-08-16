@@ -9,6 +9,21 @@ from IPython.utils.traitlets import Unicode, Float, List
 from sensors import ScalarSensorWidget, TupleSensorWidget
 
 class SensorTag(object):
+    # Dict where we store instances of objects
+    _instances = dict()
+
+    def __new__(cls, *args, **kwargs):
+        ''' Used for the Singleton pattern
+        In a Python instances, there should only be one SensorTag object for
+        each MAC address. The first time, we created the object and store it.
+        Subsequently calls use the same object.
+        We hash using the first argument (MAC address).
+        '''
+        if args[0] not in cls._instances:
+            cls._instances[args[0]] = super(SensorTag, cls).__new__( cls, *args, **kwargs)
+
+        return cls._instances[args[0]]
+
     def __init__(self, addr):
         ''' Construct with BT address '''
         self._bluetooth_addr = addr
