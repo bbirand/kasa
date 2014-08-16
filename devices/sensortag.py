@@ -11,6 +11,31 @@ import re
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
 from sensors import TemperatureWidget
 
+class ReadIntervalThread(threading.Thread):
+    ''' Thread that calls the `read` method at regular intervals
+    This is especially useful for widget elements
+    By default, calls it every 10 seconds
+    '''
+    def __init__(self, obj, every=10):
+        ''' The only argument is the object whose `.read()` method we will 
+        be calling. Note that this method must be thread-safe
+        '''
+        super(ReadIntervalThread, self).__init__()
+        self.obj = obj
+        self.every = every
+        self._stop = threading.Event()
+
+    def run(self):
+        while self.is_active():
+            self.obj.read()
+            time.sleep(self.every)
+
+    def stop(self):
+        self._stop.set()
+
+    def is_active(self):
+        return not self._stop.isSet()
+        
 class SensorTag(object):
     def __init__(self, addr):
         ''' Construct with BT address '''
@@ -176,8 +201,23 @@ class SensorTagTemperature(TemperatureWidget):
         # Make sure to call the super constructor for traitlets
         super(SensorTagTemperature, self).__init__()
 
-        # When initiated take a first reading
-        #self.read()
+        # Thread that will update the values
+        self._update_thread = None
+
+    def update_every(self, every=10):
+        ''' Starts a new thread for updating the readings regularly
+        '''
+        if self._update_thread is not None and self._update_thread.is_alive():
+            raise IOError("There's already an updated running")
+
+        self._update_thread = ReadIntervalThread(self, every)
+        self._update_thread.start()
+
+    def stop_update(self):
+        ''' Stop the regular updating thread'''
+        if self._update_thread is not None and self._update_thread.is_alive():
+            self._update_thread.stop()
+            self._update_thread = None
 
     def calcTmpTarget(self, objT, ambT):
 	    '''
