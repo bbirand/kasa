@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 import zmq
-
-import pexpect
-
-import sys
 import threading
-import time
-import re
 
 from mixins import RegularUpdateMixin
 
@@ -26,15 +20,32 @@ class SensorTag(object):
         self._connect_to_tag()
 
         # Initiate all the sensors
-        self.temperature = SensorTagTemperature(self)
-        self.magnetometer = SensorTagMagnetometer(self)
+        #self.temperature = SensorTagTemperature(self)
+        #self.magnetometer = SensorTagMagnetometer(self)
 
+    def __getattr__(self, name):
+        '''
+        If the given attribute is not found, check if it's a supported sensor
+        If it is, instantiate it
+        '''
+        lookup_dict = {'temperature': SensorTagTemperature,
+                       'magnetometer' : SensorTagMagnetometer}
+
+        # If the sensor is not supported, raise exception
+        if name not in lookup_dict:
+            raise AttributeError(name)
+
+        sensor_class = lookup_dict[name]
+        sensor_obj = sensor_class(self)
+        setattr(self, name, sensor_obj )
+        return sensor_obj
 
     '''
     Static Methods for discovery
     '''
     @staticmethod
     def discover():
+        import pexpect
 
         sensort_tags=[]
 
@@ -136,7 +147,7 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         super(SensorTagMagnetometer, self).__init__()
 
         # When initiated take a first reading
-        #self.read()
+        threading.Thread(target=self.read).start()
 
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''
@@ -188,6 +199,11 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
         # Make sure to call the super constructor for traitlets
         super(SensorTagTemperature, self).__init__()
 
+        # Run the read command in a thread so that the GUI can be displayed while
+        # the values are loading
+        #self.read()
+        threading.Thread(target=self.read).start()
+
     def read(self):
         ''' Return the temperature in Celsius
 
@@ -237,6 +253,7 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
 	    return tObj
 
 def main():
+    import sys
 
     port = "5556"
     context = zmq.Context()
