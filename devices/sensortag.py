@@ -19,23 +19,20 @@ class SensorTag(object):
         # Initiate a connection with the tag
         self._connect_to_tag()
 
-        # Initiate all the sensors
-        #self.temperature = SensorTagTemperature(self)
-        #self.magnetometer = SensorTagMagnetometer(self)
+        self._contained_sensors = {'temperature': SensorTagTemperature,
+                                   'magnetometer' : SensorTagMagnetometer}
 
     def __getattr__(self, name):
         '''
         If the given attribute is not found, check if it's a supported sensor
         If it is, instantiate it
         '''
-        lookup_dict = {'temperature': SensorTagTemperature,
-                       'magnetometer' : SensorTagMagnetometer}
 
         # If the sensor is not supported, raise exception
-        if name not in lookup_dict:
+        if name not in self._contained_sensors:
             raise AttributeError(name)
 
-        sensor_class = lookup_dict[name]
+        sensor_class = self._contained_sensors[name]
         sensor_obj = sensor_class(self)
         setattr(self, name, sensor_obj )
         return sensor_obj
