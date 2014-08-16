@@ -8,34 +8,12 @@ import threading
 import time
 import re
 
+from mixins import RegularUpdateMixin
+
+# GUI-related
 from IPython.utils.traitlets import Unicode, Float # Used to declare attributes of our widget
 from sensors import TemperatureWidget
 
-class ReadIntervalThread(threading.Thread):
-    ''' Thread that calls the `read` method at regular intervals
-    This is especially useful for widget elements
-    By default, calls it every 10 seconds
-    '''
-    def __init__(self, obj, every=10):
-        ''' The only argument is the object whose `.read()` method we will 
-        be calling. Note that this method must be thread-safe
-        '''
-        super(ReadIntervalThread, self).__init__()
-        self.obj = obj
-        self.every = every
-        self._stop = threading.Event()
-
-    def run(self):
-        while self.is_active():
-            self.obj.read()
-            time.sleep(self.every)
-
-    def stop(self):
-        self._stop.set()
-
-    def is_active(self):
-        return not self._stop.isSet()
-        
 class SensorTag(object):
     def __init__(self, addr):
         ''' Construct with BT address '''
@@ -135,7 +113,7 @@ class SensorTag(object):
             #print "Got response: " + result
             return result
 
-class SensorTagMagnetometer(object):
+class SensorTagMagnetometer(RegularUpdateMixin):
     '''
     Magnetometer device for TI SensorTag
 
@@ -192,8 +170,7 @@ class SensorTagMagnetometer(object):
             #TODO Raise an exception?
             return None
 
-
-class SensorTagTemperature(TemperatureWidget):
+class SensorTagTemperature(RegularUpdateMixin, TemperatureWidget):
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
@@ -201,23 +178,25 @@ class SensorTagTemperature(TemperatureWidget):
         # Make sure to call the super constructor for traitlets
         super(SensorTagTemperature, self).__init__()
 
-        # Thread that will update the values
-        self._update_thread = None
+    def read(self):
+        ''' Return the temperature in Celsius
 
-    def update_every(self, every=10):
-        ''' Starts a new thread for updating the readings regularly
+        Uses the read_value method of SensorTag with the appropriate addresses
         '''
-        if self._update_thread is not None and self._update_thread.is_alive():
-            raise IOError("There's already an updated running")
 
-        self._update_thread = ReadIntervalThread(self, every)
-        self._update_thread.start()
+        rval = self.sensortag._read_value(ctrl_addr = '0x29', read_addr = '0x25', 
+                                         enable_cmd = '01', disable_cmd = '00').split()
 
-    def stop_update(self):
-        ''' Stop the regular updating thread'''
-        if self._update_thread is not None and self._update_thread.is_alive():
-            self._update_thread.stop()
-            self._update_thread = None
+        # Check if we returned a valid value
+        if rval != "":
+            objT = SensorTag.floatfromhex(rval[1] + rval[0])
+            ambT = SensorTag.floatfromhex(rval[3] + rval[2])
+
+            self.value = self.calcTmpTarget(objT, ambT)
+            return self.value
+        else:
+            #TODO Raise an exception?
+            return None
 
     def calcTmpTarget(self, objT, ambT):
 	    '''
@@ -246,27 +225,6 @@ class SensorTagTemperature(TemperatureWidget):
 	    tObj = (tObj - 273.15)
 	    #return "%.2f C" % tObj
 	    return tObj
-
-    def read(self):
-        ''' Return the temperature in Celsius
-
-        Uses the read_value method of SensorTag with the appropriate addresses
-        '''
-
-        rval = self.sensortag._read_value(ctrl_addr = '0x29', read_addr = '0x25', 
-                                         enable_cmd = '01', disable_cmd = '00').split()
-
-        # Check if we returned a valid value
-        if rval != "":
-            objT = SensorTag.floatfromhex(rval[1] + rval[0])
-            ambT = SensorTag.floatfromhex(rval[3] + rval[2])
-
-            self.value = self.calcTmpTarget(objT, ambT)
-            return self.value
-        else:
-            #TODO Raise an exception?
-            return None
-
 
 def main():
 
