@@ -27,7 +27,13 @@ class RegularUpdateMixin(object):
         ''' Starts a new thread for updating the readings regularly
         '''
         if self._update_thread is not None and self._update_thread.is_alive():
-            raise IOError("There's already an updated running")
+            # There's already an updater running
+            # If its update interval is the same as the new one, don't do anything
+            if self._update_thread.every == every:
+                return
+            # Otherwise throw an error.
+            else:
+                raise IOError("There's an updated running with a different interval.")
 
         self._update_thread = self.ReadIntervalThread(self, every)
         self._update_thread.start()
