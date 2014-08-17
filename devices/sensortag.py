@@ -112,11 +112,11 @@ class SensorTag(object):
             self.socket.connect("tcp://localhost:%s" % port)
 
             # Send the connection command
-            self.socket.send('GATT ' + self._bluetooth_addr + ' connect')
-            result = self.socket.recv()
+            self.socket.send('GATT connect {}'.format(self._bluetooth_addr))
+            result = self.socket.recv() #TODO Add time out handling
             if result == 'ok':
                 return True
-            elif result == 'error':
+            elif result == 'fail':
                 raise IOError('Cannot connect to device. Is it discoverable?')
             else:
                 raise ValueError('Unexpected response received: ' + result)
@@ -130,8 +130,8 @@ class SensorTag(object):
         Finally writes `disable_cmd` to `ctrl_addr`
         '''
         with self._device_lock:
-            self.socket.send('GATT ' + self._bluetooth_addr + ' read_value {} {} {} {} {}'.format(ctrl_addr, read_addr, 
-                                                            enable_cmd, disable_cmd, sleep_amount))
+            self.socket.send('GATT read_value {} {} {} {} {} {}'.format( self._bluetooth_addr, ctrl_addr, 
+                                                        read_addr, enable_cmd, disable_cmd, sleep_amount))
             result = self.socket.recv()
             #print "Got response: " + result
             return result

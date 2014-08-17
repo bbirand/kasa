@@ -123,7 +123,7 @@ def worker_thread(worker_url, bluetooth_addr, context=None):
         gatt = st_connect(bluetooth_addr)
         socket.send(b'ok')
     except IOError:
-        socket.send(b'error')
+        socket.send(b'fail')
         return
 
     while True:
@@ -192,25 +192,27 @@ def main():
     while True:
         # Get the outside message in several parts
         # Store the client_addr
-        client_addr, _, cmd = socket.recv_multipart()
-        print "Received request {} from '{}'".format(cmd, client_addr)
-        cmd = cmd.split(' ')
+        client_addr, _, msg = socket.recv_multipart()
+        print "Received request {} from '{}'".format(msg, client_addr)
+        msg = msg.split(' ')
+
+        command = msg[0]
 
         # Return list of active connections
-        if cmd[0] == 'active':
+        if command == 'active':
             active_socks = worker_sockets.keys()
             socket.send_multipart([client_addr, b'', ",".join(active_socks)])
             continue
 
         # Parse bluetooth address
-        bluetooth_addr = cmd[0]
-        commands = cmd[1:]
+        bluetooth_addr = msg[1]
+        command_args = msg[2:]
 
         # Worker URL to be shared
         url_worker = "inproc://{}".format(bluetooth_addr)
 
         # Connect: Set up socket and start thread
-        if commands[0] == 'connect':
+        if command == 'connect':
             # Check if we're already connected (if so, don't do anything)
             if bluetooth_addr in worker_sockets:
                 socket.send_multipart([client_addr, b'', b'ok'])
@@ -231,10 +233,10 @@ def main():
                 worker_sockets[bluetooth_addr] = worker
                 socket.send_multipart([client_addr, b'', b'ok'])
             else:
-                # Connection is not successful
-                socket.send_multipart([client_addr, b'', b'error'])
+                # Connection is not successful, pass on error message
+                socket.send_multipart([client_addr, b'', stats])
 
-        elif commands[0] == 'disconnect':
+        elif command == 'disconnect':
             # Send disconnect to thread, and close and remove the socket
             # from the dict
             worker = worker_sockets[bluetooth_addr]
@@ -251,7 +253,7 @@ def main():
             # Fetch the right socket
             worker = worker_sockets[bluetooth_addr]
 
-            worker.send(" ".join(commands))
+            worker.send(" ".join([command, command_args]))
             worker_result = worker.recv()
 
             # Relay reply to the original thread
