@@ -3,6 +3,7 @@ import zmq
 import threading
 
 from mixins import RegularUpdateMixin
+from utils import raise_msg
 
 # GUI-related
 from IPython.utils.traitlets import Unicode, Float, List
@@ -117,9 +118,9 @@ class SensorTag(object):
             if result == 'ok':
                 return True
             elif result == 'fail':
-                raise IOError('Cannot connect to device. Is it discoverable?')
+                raise_msg(IOError('Cannot connect to SensorTag. Is it discoverable?'))
             else:
-                raise ValueError('Unexpected response received: ' + result)
+                raise_msg(ValueError('Unexpected response received: ' + result))
 
     def _read_value(self, ctrl_addr = '0x29', read_addr = '0x25', enable_cmd = '01', disable_cmd = '00' , sleep_amount = 0.3):
         ''' Uses the GATT interface to read a value
