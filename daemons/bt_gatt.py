@@ -253,7 +253,7 @@ def main():
             # Fetch the right socket
             worker = worker_sockets[bluetooth_addr]
 
-            worker.send(" ".join([command, command_args]))
+            worker.send(command + ' ' + ' '.join(command_args))
             worker_result = worker.recv()
 
             # Relay reply to the original thread
