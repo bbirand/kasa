@@ -40,6 +40,7 @@ class RegularUpdateMixin(object):
 
     def stop_update(self):
         ''' Stop the regular updating thread'''
+        #TODO Use an Event for stopping the thread
         if self._update_thread is not None and self._update_thread.is_alive():
             self._update_thread.stop()
             self._update_thread = None
@@ -55,6 +56,10 @@ class RegularUpdateMixin(object):
             '''
             super(RegularUpdateMixin.ReadIntervalThread, self).__init__(every)
             self.obj = obj
+
+        # Implemented in parent
+        #def setup():
+        #    return
 
         def loop(self):
             self.obj.read()
