@@ -6,6 +6,9 @@
      opacity:1;
 }
 
+
+/*
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700);
 @font-face {
   font-family:'Adelle';
   src:url('fonts/adelle.eot') format('embedded-opentype'),
@@ -13,13 +16,15 @@
     url('fonts/adelle.ttf') format('truetype'),
     url('fonts/adelle.svg') format('svg')
 }
+*/
 
 html, body {
   height: 100%;
   margin: 0;
 
   /*font-family: 'PT Sans', sans-serif;*/
-  font-family: "Adelle",georgia,serif;
+  font-family: "Source Sans Pro",georgia,serif;
+  font-size:24px;
 }
 
 .vertical-align {
@@ -37,7 +42,7 @@ section#top-section {
 }
 
 section#top-section h1 {
-    font-size:50px;
+    font-size:64px;
     margin-bottom: 0px;
     padding-bottom: 0px;
 }
@@ -55,8 +60,7 @@ section#top-section h1 {
 }
 
 #top-subtitle {
-    font-size: 18px;
-
+    font-size: 32px;
 }
 
 section {
