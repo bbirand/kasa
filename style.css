@@ -74,9 +74,13 @@ section h2 {
 }
 
 pre.code {
-    font-size:12px;
+    font-size:16px;
     max-width: 550px;
     margin:0 auto;
+}
+
+table.code_table {
+  font-size: 16px;
 }
 
 section p {

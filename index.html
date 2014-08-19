@@ -6,6 +6,7 @@
         <!--<link href="lib/animate.min.css" rel="stylesheet">-->
         <link href="lib/animations.css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
         <link href="style.css" rel="stylesheet" type="text/css" charset="utf-8"/>
     </head>
     <body>
@@ -30,8 +31,7 @@
         <p class='animated fadeInDownShort' data-id='2'> We support a growing number of devices that can be easily discovered, configured and made available. All of this is kept behind the scenes, so all you have to do is run the discover function from within your browser.</p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
-        <pre class="code animated fadeInRightShort" data-id='3'>
-# Discover supported devices in your home
+        <pre class="code animated fadeInRightShort" data-id='3'><code class="python"># Discover supported devices in your home
 >>> kasa.discover()
 Type           Name
 ----------------------------
@@ -45,9 +45,9 @@ WeMo Switch 'AC' turned on.
 
 # Access the temperature sensor
 >>> temp = kasa['Living Room'].temperature
->>> printtemp
+>>> print temp
 'Living Room' temperature is 23.0C. 
-        </pre>
+</code></pre>
     </div>
     </div> <!-- div.row -->
     </div>
@@ -88,14 +88,14 @@ WeMo Switch 'AC' turned on.
         <p class='animated fadeInDownShort' data-id='1'> Great, I can turn control things via code or GUI. But how do I get these devices to work together to do something useful? </p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
-        <pre class='code animated fadeInDownShort' data-id='2'>
-# When temperature goes above 23C, turn on AC 
->>> (temp > 23) | ac.on() 
+        <pre class='code animated fadeInDownShort' data-id='2'><code class="python"># When temperature goes above 23C, turn on AC 
+>>> (temp > 23) | ac.on
+
 # Turn on AC at 6pm every day
->>> when('6pm') | ac.on() 
+>>> when('6pm') | ac.on
+
 # Turn lights on/off randomly every 5 mins
->>> every('5min')| random_binary() | ac.on() 
-        </pre>
+>>> every('5min')| random_binary() | ac.on</code></pre>
     </div>
     </div>
     </div>
@@ -108,8 +108,7 @@ WeMo Switch 'AC' turned on.
           </div>
         </header>
         <p>Interface with the amazing Python scientific ecosystem</p>
-        <pre class="code">
-# Plot readings form sensor in real-time 
+        <pre class="code"><code class="python"># Plot readings form sensor in real-time 
 >>> temp.plot()
 ## Plot of the temperature, printed in IPython
 
@@ -118,8 +117,7 @@ WeMo Switch 'AC' turned on.
 
 # Read historical values
 >>> val = kasa.read('temp')
-# Pandas DataFrame for manipulating, plotting, histogramming, correlations, intro to scikit
-        </pre>
+# Pandas DataFrame for manipulating, plotting, histogramming, correlations, intro to scikit</code></pre>
         </section>
 
         <section class='color-a'>
@@ -127,16 +125,14 @@ WeMo Switch 'AC' turned on.
             <h1>Social Batteries Included</h1>
         </header>
         <p>Create social applications with built-in integration with Twilio, Facebook, and Twitter.</p>
-        <pre class="code">
-# Post temperature on Twitter every day
+        <pre class="code"><code class="python"># Post temperature on Twitter every day
 >>> temp.every('day') | twitter.post("The temperature outside is {}")
 
 # Let your friends know when you are home
 >>> motion_sensor | facebook.post("I just got home!")
 
 # Send text messages when something is wrong
->>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")
-        </pre>
+>>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")</code></pre>
         </section>
 
         <section class='color-b'>
@@ -243,6 +239,8 @@ WeMo Switch 'AC' turned on.
 
     <script src="lib/jquery-2.1.1.min.js"></script> 
     <script src="lib/css3-animate-it.js"></script> 
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
     <!--
     <script>
