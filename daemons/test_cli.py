@@ -10,7 +10,7 @@ def main():
     socket.connect("tcp://localhost:%s" % port)
 
     print "Sending request:'{}'".format(" ".join(sys.argv[1:]))
-    socket.send("GATT " + " ".join(sys.argv[1:]))
+    socket.send(" ".join(sys.argv[1:]))
 
     message = socket.recv_multipart()
     print "Received reply:'{}'".format(message)
