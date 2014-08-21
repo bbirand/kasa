@@ -4,6 +4,8 @@
 from devices.wemo import WeMoSwitch
 from devices.sensortag import SensorTag
 
+from devices.utils import raise_msg
+
 class Kasa(object):
 
     def __init__(self):
@@ -19,7 +21,7 @@ class Kasa(object):
             if d[1] == name:
                 return d[0].get_device(name)
         # If there was no match, raise exception
-        raise LookupError("Device '{}' not available.".format(name))
+        raise_msg( LookupError("Device '{}' not available.".format(name)) )
 
     def _pretty_print_devs(self):
         ''' Look at self.devs and pprint '''
