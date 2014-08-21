@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import zmq
 import threading
+import time
 
 from mixins import RegularUpdateMixin
 from utils import raise_msg
@@ -151,6 +152,7 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         # When initiated take a first reading
         threading.Thread(target=self.read).start()
 
+
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''
         self.calibration =  self.read(with_calibrate = False)
@@ -205,6 +207,12 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
         # the values are loading
         #self.read()
         threading.Thread(target=self.read).start()
+
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._bluetooth_addr + 'Temp'
 
     def read(self):
         ''' Return the temperature in Celsius
