@@ -1,3 +1,5 @@
+import zmq 
+
 from ouimeaux.environment import Environment
 from ouimeaux.signals import statechange, receiver
 
@@ -5,43 +7,53 @@ from IPython.html import widgets
 from IPython.utils.traitlets import Bool, Unicode, Float, Int
 from devices.utils import AlignableWidget
 
-
-class WeMoServer(object):
-    '''
-    Base class for running the server for listening and sending
-    commands to WeMo devices. Registers a base handler for all the incoming 
-    packets, and exposes several signals for interested parties.
-    If there aren't any devices listening to WeMo communications, then
-    the server is closed
-    '''
-    pass
-
 class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
     ''' Our implementation of a WeMo Switch '''
     _view_name = Unicode('WeMoSwitchView', sync=True)
     value = Bool(sync=True)
     description = Unicode(sync=True)
-    
+
+    @staticmethod
+    def _send_wemo(command):
+        ''' Low-level send a command to the WeMo module
+
+        Mostly intended for internal use of the class
+        '''
+        #TODO Wrap this type of functionality in a Kasa protocol library
+
+        # Connect to broker
+        port = "9800"
+        context = zmq.Context().instance()
+        sock = context.socket(zmq.REQ)
+        sock.connect("tcp://localhost:%s" % port)
+
+        # Send the command
+        sock.send('WeMo {}'.format(command))
+        result =  sock.recv() 
+        sock.close()
+        return result
+
     @staticmethod
     def discover():
         # Discover WeMo devices in the environment
-        env = Environment(with_subscribers = False)
-        env.start()
-        env.discover(seconds=3)
-        env.wait(timeout=3)
-        
-        # Save the list of switches found
-        l = env.list_switches()
+        port = "9800"
+        context = zmq.Context().instance()
+        sock = context.socket(zmq.REQ)
+        sock.connect("tcp://localhost:%s" % port)
 
-        # Make sure the server is closed
-        env.upnp.server.stop()
-        env.registry.server.stop()
+        # Send the connection command
+        sock.send('WeMo list')
+        result = sock.recv()
+        sock.close()
 
-        # Create correct data structure
-        l2 = map( lambda x:(WeMoSwitch, x), l)
-
-        return l2
-
+        if result != '':
+            devs = result.split(' ')
+            # Create correct data structure
+            l2 = map( lambda x:(WeMoSwitch, x), devs)
+            return l2
+        else:
+            return None
+    
     @staticmethod
     def pretty_name():
         ''' Name of the class '''
@@ -50,23 +62,14 @@ class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
     @staticmethod
     def get_device(name):
         ''' Find the WeMo device by name'''
-
-        #Find the device
-        env = Environment(with_subscribers = False, with_discovery=False)
-        env.start()
-        switch = env.get_switch(name)
-
-        # Make sure the server is not listening
-        env.upnp.server.stop()
-        env.registry.server.stop()
-
-        return WeMoSwitch(switch)
+        # In this case, just call the constructor
+        return WeMoSwitch(name)
 
     #
     # Instance methods
     #
 
-    def __init__(self,asw, description=None, **kwargs):
+    def __init__(self, name, description=None, **kwargs):
         '''
         Takes as input a ouimeaux switch object
         '''
@@ -75,26 +78,31 @@ class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
         # Otherwise, a new *instance* variable is created
         super(widgets.DOMWidget, self).__init__(**kwargs)
 
-        self.switch = asw
+        self.name = name
         self.value = self.state()
+
         if description:
             self.description = description
         else:
-            self.description = asw.name
+            self.description = self.name
 
         # Callback for changing value
         self.on_trait_change(self.on_value_change, 'value')
 
     def on(self):
-        self.switch.on()
+        self._send_wemo('on {}'.format(self.name))
         self.value = True
 
     def off(self):
-        self.switch.off()
+        self._send_wemo('off {}'.format(self.name))
         self.value = False
 
     def state(self):
-        return bool(self.switch.get_state())
+        val = self._send_wemo('state {}'.format(self.name))
+        if val == 'on':
+            return True
+        else:
+            return False
 
     #
     # Change callback
@@ -110,22 +118,22 @@ class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
         else:
             self.off()
 
-    #
-    # Signals
-    #
-    def statechange(self, **kwargs):
-        '''
-        Decorator to use for adding event handlers
-        '''
-        #TODO Check if the environment was already running
+    ##
+    ## Signals
+    ##
+    #def statechange(self, **kwargs):
+    #    '''
+    #    Decorator to use for adding event handlers
+    #    '''
+    #    #TODO Check if the environment was already running
 
-        def _decorator(func):
-            def new_func(**kwargs):
-                # Make sure only the correct objects are notified
-                if kwargs['sender'].name == self.switch.name:
-                    func(**kwargs)
+    #    def _decorator(func):
+    #        def new_func(**kwargs):
+    #            # Make sure only the correct objects are notified
+    #            if kwargs['sender'].name == self.switch.name:
+    #                func(**kwargs)
 
-            statechange.connect(new_func, **kwargs)
-            return new_func
-        return _decorator
+    #        statechange.connect(new_func, **kwargs)
+    #        return new_func
+    #    return _decorator
 

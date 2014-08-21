@@ -12,9 +12,14 @@ class Kasa(object):
 
     def __getitem__(self, name):
         ''' Find the device by name'''
+        
+        # Look at all the devices we have in the cache
         for d in self.devs:
+            # If there is match return it
             if d[1] == name:
                 return d[0].get_device(name)
+        # If there was no match, raise exception
+        raise LookupError("Device '{}' not available.".format(name))
 
     def _pretty_print_devs(self):
         ''' Look at self.devs and pprint '''
@@ -50,8 +55,11 @@ class Kasa(object):
         self.devs = []
 
         #TODO: Get the list of modules in devices
-        for a in [WeMoSwitch, SensorTag]:
-            self.devs.extend(a.discover())
+        #for a in [WeMoSwitch, SensorTag]:
+        for a in [WeMoSwitch]:
+            res = a.discover()
+            if res:
+                self.devs.extend(a.discover())
 
         #Pretty Print list of devices
         if pprint:

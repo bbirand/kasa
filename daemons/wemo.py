@@ -71,6 +71,7 @@ def main():
 
         # Commands on objects
         switch_name = msg[1]
+        print switch_name
         s = env.get_switch(switch_name)
 
         if command == 'on':
