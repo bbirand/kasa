@@ -56,12 +56,12 @@ class Kasa(object):
         # This would be reset once
         self.devs = []
 
-        #TODO: Get the list of modules in devices
-        #for a in [WeMoSwitch, SensorTag]:
-        for a in [WeMoSwitch]:
+        #TODO: Dynamically get installed modules
+        for a in [WeMoSwitch, SensorTag]:
+            #TODO Spawn each discover function in its own greenlet
             res = a.discover()
             if res:
-                self.devs.extend(a.discover())
+                self.devs.extend(res)
 
         #Pretty Print list of devices
         if pprint:

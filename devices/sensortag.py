@@ -42,25 +42,18 @@ class SensorTag(object):
     '''
     @staticmethod
     def discover():
-        import pexpect
+        ''' Return list of discovered sensors
+        '''
+        port = "9800"
+        context = zmq.Context().instance()
+        socket = context.socket(zmq.REQ)
+        socket.connect("tcp://localhost:%s" % port)
 
-        sensort_tags=[]
+        socket.send('GATT active')
+        result = socket.recv().split(' ')
+        socket.close()
 
-        # Perform a scan using hcitool
-        c = pexpect.spawn('hcitool lescan')
-
-        # Keep scanning for items until timeout is reached
-        try:
-            while True:
-                c.expect(["(?P<MAC>BC:6A:[A-Z0-9:]+) (?P<name>.*)", pexpect.EOF], timeout=3)
-                # Add to found list
-                sensort_tags.append([SensorTag, c.match.group('MAC')])
-        except pexpect.TIMEOUT:
-            pass
-        finally:
-            c.close(force=True)
-
-        return sensort_tags
+        return map( lambda x: (SensorTag, x), result)
 
     @staticmethod
     def pretty_name():
