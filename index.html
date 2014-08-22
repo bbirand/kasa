@@ -28,7 +28,10 @@
     <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>Quick, interactive access to your devices</p>
-        <p class='animated fadeInDownShort' data-id='2'> We support a growing number of devices that can be easily discovered, configured and made available. All of this is kept behind the scenes, so all you have to do is run the discover function from within your browser.</p>
+        <p class='animated fadeInDownShort' data-id='2'> We support a growing
+        number of devices that can be easily discovered, configured and made
+        available. All of this is kept behind the scenes, so all you have to
+        do is to run the discover function from within your browser.</p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
         <pre class="code animated fadeInRightShort" data-id='3'><code class="python"># Discover supported devices in your home
@@ -91,7 +94,7 @@ WeMo Switch 'AC' turned on.
         to make it even easier.
         </p>
      </div>
-     <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
+     <div class="col-md-6 col-md-offset-0 col-sm-10 col-sm-offset-1">
         <pre class='code animated fadeInDownShort' data-id='2'><code class="python"># When temperature goes above 23C, turn on AC 
 >>> (temp > 23) | ac.on
 
@@ -110,8 +113,8 @@ WeMo Switch 'AC' turned on.
           <div class='animatedParent'>
               <h1 class='animated fadeInDownShort'>Analyze Your Home</h1>
           </div>
+          <p>Interface with the amazing Python scientific ecosystem</p>
         </header>
-        <p>Interface with the amazing Python scientific ecosystem</p>
         <pre class="code"><code class="python"># Plot readings form sensor in real-time 
 >>> temp.plot()
 ## Plot of the temperature, printed in IPython
@@ -127,8 +130,8 @@ WeMo Switch 'AC' turned on.
         <section class='color-a'>
         <header>
             <h1>Social Batteries Included</h1>
+            <p>Create social applications with built-in integration with Twilio, Facebook, and Twitter.</p>
         </header>
-        <p>Create social applications with built-in integration with Twilio, Facebook, and Twitter.</p>
         <pre class="code"><code class="python"># Post temperature on Twitter every day
 >>> temp.every('day') | twitter.post("The temperature outside is {}")
 
@@ -142,36 +145,26 @@ WeMo Switch 'AC' turned on.
         <section class='color-b'>
           <div class="container">
             <div class="row">
-              <div class="col-md-6 col-md-offset-3">
             <header>
                 <h1>Supported Hardware</h1>
+                <p>
+                We fully support several hardware devices. These devices are
+                extremely easy to control via our programming interface.
+                </p>
             </header>
-              </div>
             </div>
-            <div class="row">
-              <p>
-              We fully support several hardware devices. These devices are
-              extremely easy to control via our programming interface.
-              </p>
-            </div><!--row-->
             <div class="row">
             <div class="col-md-4 col-md-offset-2" style="text-align: center;">
                 <a href="http://www.ti.com/tool/cc2541dk-sensor">
                 <img style="width:50%" src="images/ti_sensortag.png"/>
                 </a>
+                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope. It can function as an iBeacon transmitter, enabling you to do all sorts of cool things programmatically. It even has two configurable buttons.</p> 
+                <p>And all of this for $25. Batteries and shipment included!</p>
             </div>
             <div class="col-md-4" style="text-align:center;">
                 <a href="www.amazon.com/dp/B00BB2MMNE/">
                 <img style="width:30%" src="images/wemo.png"/>
                 </a>
-            </div>
-            </div><!--row-->
-            <div class="row">
-            <div class="col-md-4 col-md-offset-2" style="text-align:center;">
-                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope. It can function as an iBeacon transmitter, enabling you to do all sorts of cool things programmatically. It even has two configurable buttons.</p> 
-                <p>And all of this for $25. Batteries and shipment included!</p>
-            </div>
-            <div class="col-md-4" style="text-align:center;">
                 <p>The WeMo allows you to control most devices by turning their power on or off. It works especially well with cheap and old devices that have as little electronics as possible. Things like ACs, electric heaters, and kettles.</p>
                 <p> Costs $50 </p>
             </div>
@@ -181,13 +174,16 @@ WeMo Switch 'AC' turned on.
 
 
       <section class='color-a'>
-      <header>
-         <h1>I'm Sold. What Do I Need?</h1>
-      </header>
-      <div class="container" style="max-width:600px">
+        <div class="container">
+          <div class="row">
+          <header>
+             <h1>I'm Sold. What Do I Need?</h1>
+          </header>
+          </div>
+
       <div class="row">
           <div class="col-md-6" style="text-align: right;">
-              <img style="width:80%" src="images/raspberry_pi.png">
+              <img style="max-width:400px; display:block; margin: 0 auto;" src="images/raspberry_pi.png">
           </div>
           <div class="col-md-6">
               <p>If you have a RaspberryPi, all you need to get started is our custom <a href="https://npmjs.org">image</a>. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
@@ -195,35 +191,33 @@ WeMo Switch 'AC' turned on.
       </div>
 
       <div class="row">
-          <div class="col-xs-12" text-align="left;">
+          <div class="col-xs-12">
               <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up!
               </p>
           </div>
       </div>
-      <div class="row" style="text-align:center;">
 
-      <div class="col-md-4">
-          <img style="width:50%" src="images/pluggable_bt.png"/><br/>
-       <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">buy this from Amazon.com ($13)</a> <br>
-       <p> This is necessary for using the SensorTag.</p>
-       </p>
-      </div>
+      <div class="row">
+        <div class="col-md-4">
+        <img style="width:50%;display:block; margin: 0 auto;" src="images/pluggable_bt.png"/><br/>
+        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">buy this from Amazon.com ($13)</a> <br>
+        <p> This is necessary for using the SensorTag.</p>
+        </div><!--col-md-4-->
 
-      <div class="col-md-4">
-          <img style="width:50%" src="images/tp_link_wifi.png"/><br/>
+        <div class="col-md-4">
+        <img style="width:50%;display:block; margin: 0 auto;" src="images/tp_link_wifi.png"/><br/>
+        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
+        <p>When you plug it in, you will have your own network called
+        `kasa`.</p>
+        </div><!--col-md-4-->
 
-          <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
-      When you plug it in, you will have your own network called `kasa`.<br>
-      </div>
-
-      <div class="col-md-4">
-          <img style="width:50%" src="images/TI_zigbee_dongle.png"/><br/>
-
+        <div class="col-md-4">
+          <img style="width:50%;display:block; margin: 0 auto;" src="images/TI_zigbee_dongle.png"/><br/>
           <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176"> buy this from DX ($16)</a>.</p>
-      </div>
+        </div><!--col-md-4-->
 
       </div><!-- row -->
-      </div><!-- container -->
+    </div><!-- container -->
 
           <br>
 
@@ -242,9 +236,13 @@ WeMo Switch 'AC' turned on.
         <header>
             <h2>Your Home, Your Control</h2>
         </header>
-        <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
+        <div class="container">
+          <div class="row">
+          <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
 
-        <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+          <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+          </div><!-- row -->
+        </div><!-- container -->
         </section>
 
     <a href="https://github.com/bbirand/kasa"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
@@ -268,6 +266,15 @@ WeMo Switch 'AC' turned on.
         });
     </script>
     -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+       Date();a=s.createElement(o),
+         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-54098613-1', 'auto');
+      ga('send', 'pageview');
+    </script>
 
     </body>
 
