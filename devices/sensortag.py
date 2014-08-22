@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import zmq
 import threading
+import time
 
 from mixins import RegularUpdateMixin
 from utils import raise_msg
@@ -10,27 +11,10 @@ from IPython.utils.traitlets import Unicode, Float, List
 from sensors import ScalarSensorWidget, TupleSensorWidget
 
 class SensorTag(object):
-    # Dict where we store instances of objects
-    _instances = dict()
-
-    def __new__(cls, *args, **kwargs):
-        ''' Used for the Singleton pattern
-        In a Python instances, there should only be one SensorTag object for
-        each MAC address. The first time, we created the object and store it.
-        Subsequently calls use the same object.
-        We hash using the first argument (MAC address).
-        '''
-        if args[0] not in cls._instances:
-            cls._instances[args[0]] = super(SensorTag, cls).__new__( cls, *args, **kwargs)
-
-        return cls._instances[args[0]]
 
     def __init__(self, addr):
         ''' Construct with BT address '''
         self._bluetooth_addr = addr
-
-        # Lock for coordinating device accesses
-        self._device_lock = threading.Lock()
 
         # Initiate a connection with the tag
         self._connect_to_tag()
@@ -105,22 +89,23 @@ class SensorTag(object):
         Tells it to connect to the bluetooth device, and save the
         connection socket it `self.socket`
         '''
-        with self._device_lock:
-            # Create local socket connection
-            port = "9800"
-            context = zmq.Context()
-            self.socket = context.socket(zmq.REQ)
-            self.socket.connect("tcp://localhost:%s" % port)
+        # Create local socket connection
+        port = "9800"
+        context = zmq.Context().instance()
+        socket = context.socket(zmq.REQ)
+        socket.connect("tcp://localhost:%s" % port)
 
-            # Send the connection command
-            self.socket.send('GATT connect {}'.format(self._bluetooth_addr))
-            result = self.socket.recv() #TODO Add time out handling
-            if result == 'ok':
-                return True
-            elif result == 'fail':
-                raise_msg(IOError('Cannot connect to SensorTag. Is it discoverable?'))
-            else:
-                raise_msg(ValueError('Unexpected response received: ' + result))
+        # Send the connection command
+        socket.send('GATT connect {}'.format(self._bluetooth_addr))
+        result = socket.recv() #TODO Add time out handling
+        socket.close()
+
+        if result == 'ok':
+            return True
+        elif result == 'fail':
+            raise_msg(IOError('Cannot connect to SensorTag. Is it discoverable?'))
+        else:
+            raise_msg(ValueError('Unexpected response received: ' + result))
 
     def _read_value(self, ctrl_addr = '0x29', read_addr = '0x25', enable_cmd = '01', disable_cmd = '00' , sleep_amount = 0.3):
         ''' Uses the GATT interface to read a value
@@ -130,12 +115,17 @@ class SensorTag(object):
         Sleeps for `sleep_amount` time, then reads the value in `read_addr` (which is returned)
         Finally writes `disable_cmd` to `ctrl_addr`
         '''
-        with self._device_lock:
-            self.socket.send('GATT read_value {} {} {} {} {} {}'.format( self._bluetooth_addr, ctrl_addr, 
-                                                        read_addr, enable_cmd, disable_cmd, sleep_amount))
-            result = self.socket.recv()
-            #print "Got response: " + result
-            return result
+        port = "9800"
+        context = zmq.Context().instance()
+        socket = context.socket(zmq.REQ)
+        socket.connect("tcp://localhost:%s" % port)
+
+        socket.send('GATT read_value {} {} {} {} {} {}'.format( self._bluetooth_addr, ctrl_addr, 
+                                                    read_addr, enable_cmd, disable_cmd, sleep_amount))
+        result = socket.recv()
+        socket.close()
+
+        return result
 
 class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
     '''
@@ -161,6 +151,12 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
 
         # When initiated take a first reading
         threading.Thread(target=self.read).start()
+
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._bluetooth_addr + 'Magneto'
 
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''
@@ -217,6 +213,12 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
         #self.read()
         threading.Thread(target=self.read).start()
 
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._bluetooth_addr + 'Temp'
+
     def read(self):
         ''' Return the temperature in Celsius
 
@@ -269,7 +271,7 @@ def main():
     import sys
 
     port = "5556"
-    context = zmq.Context()
+    context = zmq.Context().instance()
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:%s" % port)
     socket.send(" ".join(sys.argv[1:]))

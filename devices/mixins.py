@@ -20,29 +20,70 @@ class RegularUpdateMixin(object):
     '''
     def __init__(self):
         # Thread that will update the values
-        self._update_thread = None
+        # This is now a global dict
+        #self._update_thread = None
         super(RegularUpdateMixin, self).__init__()
 
     def update_every(self, every=10):
         ''' Starts a new thread for updating the readings regularly
         '''
-        if self._update_thread is not None and self._update_thread.is_alive():
-            # There's already an updater running
-            # If its update interval is the same as the new one, don't do anything
-            if self._update_thread.every == every:
-                return
-            # Otherwise throw an error.
-            else:
-                raise IOError("There's an updated running with a different interval.")
+        global _thread_dict
 
-        self._update_thread = self.ReadIntervalThread(self, every)
-        self._update_thread.start()
+        # Obtain the hash of the current object. This implemented in the subclass
+        #of the mixin
+        new_hash = self._item_hash() + "every{}".format(every)
 
-    def stop_update(self):
+        # Look up in the global dict
+        try:
+            if new_hash in _thread_dict and _thread_dict[new_hash].is_alive():
+                # A thread for this already exists
+                #BUG Stop the previous one, and restart a new one
+                #TODO This is clearly bad, has to be handled differently
+                _thread_dict[new_hash].stop()
+                del _thread_dict[new_hash]
+        except NameError:
+            _thread_dict = {}
+
+        new_thread = self.ReadIntervalThread(self, every)
+        new_thread.start()
+
+        # Save so that we don't restart
+        _thread_dict[new_hash] = new_thread
+
+        return new_thread
+
+    def stop_all_updates(self):
+        '''
+        Stop all the threads associated with this thread
+        '''
+        global _thread_dict
+        for k,v in _thread_dict.items():
+            if k.startswith(self._item_hash()+"every") and v.is_alive():
+                _thread_dict[k].stop()
+                del _thread_dict[k]
+
+    def stop_update(self, every=None):
         ''' Stop the regular updating thread'''
-        if self._update_thread is not None and self._update_thread.is_alive():
-            self._update_thread.stop()
-            self._update_thread = None
+        global _thread_dict
+
+        # If every is not given, check if there is only one poller
+        if every is None:
+            m = [k for k,v in _thread_dict.items() if k.startswith(self._item_hash()+"every")]
+            if len(m) == 0:
+                raise AttributeError("Couldn't find any active pollers")
+            elif len(m) == 1:
+                print "Killing {}".format(k)
+                new_hash = k
+            elif len(m) > 1:
+                raise AttributeError( "Too many simultaneously process. Which one?")
+        else:
+            # Obtain the hash of the current object. This implemented in the subclass
+            #of the mixin
+            new_hash = self._item_hash() + "every{}".format(every)
+
+        if new_hash in _thread_dict and _thread_dict[new_hash].is_alive():
+            _thread_dict[new_hash].stop()
+            del _thread_dict[new_hash]
 
     class ReadIntervalThread(RegularStoppableThread):
         ''' Thread that calls the `read` method at regular intervals
@@ -55,6 +96,10 @@ class RegularUpdateMixin(object):
             '''
             super(RegularUpdateMixin.ReadIntervalThread, self).__init__(every)
             self.obj = obj
+
+        # Implemented in parent
+        #def setup():
+        #    return
 
         def loop(self):
             self.obj.read()

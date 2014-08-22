@@ -21,10 +21,23 @@ class RegularStoppableThread(threading.Thread):
         # Used for recognizing our threads
         self._is_kasa_thread = True
 
+    def setup(self):
+        '''
+        Will be called once, when the thread is first started
+        By default, doesn't do anything, but can also set
+        instance variables.
+        '''
+        return 
+        #raise NotImplemented("method loop must be implemented")
+
     def loop(self):
+        '''
+        Actions to be carried at every interval
+        '''
         raise NotImplemented("method loop must be implemented")
 
     def run(self):
+        self.setup()
         while self.is_active():
             self.loop()
             time.sleep(self.every)

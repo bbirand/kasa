@@ -13,7 +13,7 @@ class ScalarSensorWidget(widgets.DOMWidget, AlignableWidget):
 
 class TupleSensorWidget(widgets.DOMWidget, AlignableWidget):
     _view_name = Unicode('TupleSensorView', sync=True)
-    value = List(trait=Float, sync=True)
+    value = List(trait=[0.,0.,0.], sync=True)
     sensor_type = Unicode(sync=True)
     sensor_unit = Unicode(sync=True)
 
