@@ -12,4 +12,5 @@ supervisor
 pexpect
 
 # for plotting
+bokeh
 plotly
