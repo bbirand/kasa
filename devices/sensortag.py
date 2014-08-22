@@ -152,6 +152,11 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         # When initiated take a first reading
         threading.Thread(target=self.read).start()
 
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._bluetooth_addr + 'Magneto'
 
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''

@@ -36,8 +36,11 @@ class RegularUpdateMixin(object):
         # Look up in the global dict
         try:
             if new_hash in _thread_dict and _thread_dict[new_hash].is_alive():
-                # Already exists
-                return 
+                # A thread for this already exists
+                #BUG Stop the previous one, and restart a new one
+                #TODO This is clearly bad, has to be handled differently
+                _thread_dict[new_hash].stop()
+                del _thread_dict[new_hash]
         except NameError:
             _thread_dict = {}
 
@@ -46,6 +49,8 @@ class RegularUpdateMixin(object):
 
         # Save so that we don't restart
         _thread_dict[new_hash] = new_thread
+
+        return new_thread
 
     def stop_all_updates(self):
         '''
