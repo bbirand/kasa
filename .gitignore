@@ -2,6 +2,13 @@ ve/
 *pyc
 *swp
 
+# Authentication keys
+misc/keys
+
+# Add IPython notebooks explicitly
+*ipynb
+
 #IPython notebook related stuff
 notebooks/.ipynb_checkpoints/
 profile/history.sqlite
+profile/security/
