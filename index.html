@@ -25,10 +25,21 @@
             <h1 class="animated fadeInDownShort">Seriously? Another home automation library?</h1>
         </header>
         <div class="container">
-        <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='200'>
+        <div class="row animatedParent animateOnce" data-appear-top-offset='-200' data-sequence='200'>
         <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-            <p>There are dozens of libraries for turning lights on and off. But that gets boring 
-                very quickly. </p>
+            <p>There are dozens of libraries for switching lights on and off; but that gets boring 
+                very quickly. We want to bring the full power of the Scientific Python ecosystem
+                into home automation.
+            </p>
+        </div>
+        <div class="col-md-4 animated fadeInLeftShort" style="text-align:left;" data-id='1'>
+            <p> Seamlessly integrate these tools with your home:
+            <ul>
+            <li>IPython Notebook</li>
+            <li>Numpy, SciPy &amp; Pandas </li>
+            <li>Scikit-learn</li>
+            </ul>
+            </p>
         </div>
         <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
         </div>
@@ -46,11 +57,9 @@
     <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Quick, interactive access to your devices.
-        We support a growing
-        number of devices that can be easily discovered, configured and made
-        available. All of this is kept behind the scenes, so all you have to
-        do is to run the discover function from within your browser.
+        Discover and control your devices interactively.
+        We support a growing number of devices that can be easily discovered and
+        configured. We take care of the networking so that you can focus on the rest. 
         </p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
@@ -61,7 +70,7 @@ Type           Name
 WeMo Switch   'AC'
 SensorTag     'Living Room'
 
-# Access power switch by name
+# Access WeMo power switch by name
 >>> ac = kasa['AC']
 >>> ac.on()
 WeMo Switch 'AC' turned on.
@@ -79,19 +88,16 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-b' >
         <header class="animatedParent" data-appear-top-offset='-100'>
-            <h1 class="animated fadeInDownShort">Mobile Friendly By Design</h1>
-            <p class="animated fadeInDownShort"> Cool! But I want to access these devices from a smartphone or a tablet. </p>
+            <h1 class="animated fadeInDownShort">Mobile Views Come For Free</h1>
         </header>
         <div class="container">
         <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='200'>
         <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-           <h4> View from desktop browser </h3>
-            <p> Do your development interactively form the luxury of your fullscreen browser</p>
+            <p> Do your development interactively form the luxury of your browser</p>
            <img style="width:100%" src="images/kasa_macosx.png"/>
         </div>
         <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
-           <h4> View from smartphone </h3>
-           <p>Access the site from mobile to monitor and control your devices</p>
+           <p>The page is mobile-optimized and looks like an app.</p>
            <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
         </div>
 
@@ -109,9 +115,8 @@ WeMo Switch 'AC' turned on.
     <div class="row animatedParent" data-sequence='300'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Program your devices using extremely powerful constructs. We borrowed
-        ideas from Functional Reactive Programming and Flow-based Programming
-        to make it even easier.
+        Program your devices using reactive programming. We built a Domain-Specific 
+        Language on Python to make it extremely intuitive to access your devices.
         </p>
      </div>
      <div class="col-md-6 col-md-offset-0 col-sm-10 col-sm-offset-1">
@@ -206,13 +211,13 @@ WeMo Switch 'AC' turned on.
               <img style="max-width:400px; display:block; margin: 0 auto;" src="images/raspberry_pi.png">
           </div>
           <div class="col-md-6">
-              <p>If you have a RaspberryPi, all you need to get started is our custom <a href="https://npmjs.org">image</a>. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
+              <p>If you have a RaspberryPi, all you need to get started is our custom <a href="#">image</a>. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
           </div>
       </div>
 
       <div class="row">
           <div class="col-xs-12">
-              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up!
+              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up. Supported devices will be discovered automatically.
               </p>
           </div>
       </div>
@@ -227,8 +232,8 @@ WeMo Switch 'AC' turned on.
         <div class="col-md-4">
         <img style="width:50%;display:block; margin: 0 auto;" src="images/tp_link_wifi.png"/><br/>
         <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
-        <p>When you plug it in, you will have your own network called
-        `kasa`.</p>
+        <p>When you plug it in, you will have your own wireless network called
+        "kasa".</p>
         </div><!--col-md-4-->
 
         <div class="col-md-4">
