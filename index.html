@@ -16,7 +16,7 @@
         <div class="animated fadeInDownShort" data-id='1' id="top-home-image"></div>
         <h1 class="animated fadeInDownShort" data-id='2'>Kasa</h1>
         <h3 class="animated fadeInDownShort" data-id='3'
-          id="top-subtitle">Powerful tools to <b>control</b> and <b>analyze</b> your home.</h3>
+          id="top-subtitle"><b>Control</b> and <b>analyze</b> your home.</h3>
         </div>
         </section>
 
@@ -27,20 +27,19 @@
         <div class="container">
         <div class="row animatedParent animateOnce" data-appear-top-offset='-200' data-sequence='200'>
         <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-            <p>There are dozens of libraries for switching lights on and off; but that gets boring 
+            <p>There are dozens of projects for switching lights on and off; but that gets boring 
                 very quickly. We are bringing the full power of the <a
 href="http://www.scipy.org/">Scientific Python</a> ecosystem into home
-automation.
+automation so that you can write <b>intelligent</b> applications.
             </p>
         </div>
         <div class="col-md-4 animated fadeInLeftShort" style="text-align:left;" data-id='1'>
-            <p> Seamless integration of these tools with your intelligent devices:
-            <ul>
-            <li>IPython Notebook</li>
-            <li>Numpy, SciPy &amp; Pandas </li>
-            <li>Scikit-learn</li>
-            </ul>
-            </p>
+            <p> Seamless integration of your intelligent devices with these libraries: </p>
+
+            <a href="http://ipython.org"><img style="width:70px" src="images/scipy/ipynb.png"/></a>
+            <a href="http://numpy.org"><img style="width:170px" src="images/scipy/numpy.png"/></a>
+            <a href="http://scipy.org"><img style="width:120px" src="images/scipy/scipy.png"/></a>
+            <a href="http://scikit-learn.org"><img style="width:120px" src="images/scipy/scikit.png"/></a>
         </div>
         <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
         </div>
@@ -58,9 +57,7 @@ automation.
     <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Discover and control your devices interactively.
-        We support a growing number of devices that can be easily discovered and
-        configured. We take care of the networking so that you can focus on the rest. 
+        Supported devices are discovered and immediately available for interactive use.
         </p>
      </div>
      <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
@@ -98,7 +95,7 @@ WeMo Switch 'AC' turned on.
            <img style="width:100%" src="images/kasa_macosx.png"/>
         </div>
         <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
-           <p>Use it from a mobile device</p>
+           <p>Use it from a mobile device without all the clutter</p>
            <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
         </div>
 
@@ -110,15 +107,15 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-a'>
         <header class='animatedParent'>
-            <h1 class='animated fadeInDownShort'>Powerful Interface for Writing Code</h1>
+            <h1 class='animated fadeInDownShort'>Natural Way To Reason About Your Code</h1>
         </header>
     <div class="container">
     <div class="row animatedParent" data-sequence='300'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Program your devices using reactive programming. We built a Domain-Specific 
-        Language on Python to make it extremely intuitive to access your devices.
-        </p>
+        <a href="http://www.reactivemanifesto.org/">Reactive programming</a> paradigms make it easy to
+        reason about your code. We built a domain-specific language over Python
+        to make it intuitive to structure your code. </p>
      </div>
      <div class="col-md-6 col-md-offset-0 col-sm-10 col-sm-offset-1">
         <pre class='code animated fadeInDownShort' data-id='2'><code class="python"># When temperature goes above 23C, turn on AC 
@@ -127,7 +124,7 @@ WeMo Switch 'AC' turned on.
 # Turn on AC at 6pm every day
 >>> when('6pm') | ac.on
 
-# Turn lights on/off randomly every 5 mins
+# Turn on/off randomly every 5 mins
 >>> every('5min')| random_binary() | ac.on</code></pre>
     </div>
     </div>
@@ -174,8 +171,9 @@ WeMo Switch 'AC' turned on.
             <header>
                 <h1>Supported Hardware</h1>
                 <p>
-                We fully support several hardware devices. These devices are
-                extremely easy to control via our programming interface.
+                Several hardware devices are fully supported. Instead of creating libraries for
+                a large number of obscure devices, we provide full support for a small set of
+                devices.
                 </p>
             </header>
             </div>
@@ -184,8 +182,8 @@ WeMo Switch 'AC' turned on.
                 <a href="http://www.ti.com/tool/cc2541dk-sensor">
                 <img style="width:50%" src="images/ti_sensortag.png"/>
                 </a>
-                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope. It can function as an iBeacon transmitter, enabling you to do all sorts of cool things programmatically. It even has two configurable buttons.</p> 
-                <p>And all of this for $25. Batteries and shipment included!</p>
+                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope, and has two configurable buttons. It can also function as an iBeacon transmitter, enabling you to create many projects.</p> 
+                <p>And all of this for $25. Batteries and shipping included!</p>
             </div>
             <div class="col-md-4" style="text-align:center;">
                 <a href="www.amazon.com/dp/B00BB2MMNE/">
