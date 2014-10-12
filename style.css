@@ -48,15 +48,16 @@ section#top-section h1 {
 }
 
 #top-home-image {
-  background-image: url("images/wizard_hat_blue.png");
+  /*background-image: url("images/wizard_hat_blue.png");*/
+  background-image: url("images/kasa_t.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
-  height: 150px;
+  height: 300px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -25px;
-  width: 200px;
+  margin-top: -5px;
+  width: 300px;
 }
 
 #top-subtitle {
