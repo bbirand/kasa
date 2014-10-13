@@ -41,6 +41,10 @@ section#top-section {
     height: 100%;
 }
 
+h1 {
+    font-variant: small-caps;
+}
+
 section#top-section h1 {
     font-size:64px;
     margin-bottom: 0px;
@@ -97,7 +101,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .color-a {
-  color: #3c6991;
+  color: black;
+  /*color: #3c6991;*/
   /*color: #FFDC6B;
   background-color: #342DA3;*/
 }

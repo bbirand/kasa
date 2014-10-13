@@ -34,7 +34,7 @@ automation so that you can write <b>intelligent</b> applications.
             </p>
         </div>
         <div class="col-md-4 animated fadeInLeftShort" style="text-align:left;" data-id='1'>
-            <p> Seamless integration of your intelligent devices with these libraries: </p>
+            <p> Seamlessly integrate your intelligent devices with these libraries: </p>
 
             <a href="http://ipython.org"><img style="width:70px" src="images/scipy/ipynb.png"/></a>
             <a href="http://numpy.org"><img style="width:170px" src="images/scipy/numpy.png"/></a>
@@ -55,12 +55,10 @@ automation so that you can write <b>intelligent</b> applications.
         </header>
     <div class="container">
     <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
-     <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Supported devices are discovered and immediately available for interactive use.
+        Supported devices are discovered and immediately available for interactive use from the IPython
+        shell.
         </p>
-     </div>
-     <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
         <pre class="code animated fadeInRightShort" data-id='3'><code class="python"># Discover supported devices in your home
 >>> kasa.discover()
 Type           Name
@@ -78,7 +76,7 @@ WeMo Switch 'AC' turned on.
 >>> print temp
 'Living Room' temperature is 23.0C. 
 </code></pre>
-    </div>
+
     </div> <!-- div.row -->
     </div>
         </section>
@@ -131,11 +129,13 @@ WeMo Switch 'AC' turned on.
     </div>
         </section>
 
+        <!--
         <section class='color-c'>
         <header>
           <div class='animatedParent'>
               <h1 class='animated fadeInDownShort'>Analyze Your Home</h1>
           </div>
+        <div id="row">
           <p>Interface with the amazing Python scientific ecosystem</p>
         </header>
         <pre class="code"><code class="python"># Plot readings form sensor in real-time 
@@ -164,17 +164,19 @@ WeMo Switch 'AC' turned on.
 # Send text messages when something is wrong
 >>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")</code></pre>
         </section>
+        -->
 
         <section class='color-b'>
           <div class="container">
             <div class="row">
             <header>
+            <div class="col-md-8 col-md-offset-2" style="text-align: center;">
                 <h1>Supported Hardware</h1>
                 <p>
-                Several hardware devices are fully supported. Instead of creating libraries for
-                a large number of obscure devices, we provide full support for a small set of
-                devices.
+                Instead of supporting a large number of obscure devices, we
+                provide full support for a small set of devices.
                 </p>
+            </div>
             </header>
             </div>
             <div class="row">
@@ -210,13 +212,13 @@ WeMo Switch 'AC' turned on.
               <img style="max-width:400px; display:block; margin: 0 auto;" src="images/raspberry_pi.png">
           </div>
           <div class="col-md-6">
-              <p>If you have a RaspberryPi, all you need to get started is our custom <a href="#">image</a>. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
+              <p>If you have a RaspberryPi, all you need to get started is our custom image. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
           </div>
       </div>
 
       <div class="row">
           <div class="col-xs-12">
-              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up. Supported devices will be discovered automatically.
+              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power up RaspberryPi. Supported devices will be discovered automatically.
               </p>
           </div>
       </div>
@@ -224,20 +226,20 @@ WeMo Switch 'AC' turned on.
       <div class="row">
         <div class="col-md-4">
         <img style="width:50%;display:block; margin: 0 auto;" src="images/pluggable_bt.png"/><br/>
-        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">buy this from Amazon.com ($13)</a> <br>
+        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">get this from Amazon.com ($13)</a> <br>
         <p> This is necessary for using the SensorTag.</p>
         </div><!--col-md-4-->
 
         <div class="col-md-4">
         <img style="width:50%;display:block; margin: 0 auto;" src="images/tp_link_wifi.png"/><br/>
-        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
+        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/">get this from Amazon.com ($9)</a></p>
         <p>When you plug it in, you will have your own wireless network called
         "kasa".</p>
         </div><!--col-md-4-->
 
         <div class="col-md-4">
           <img style="width:50%;display:block; margin: 0 auto;" src="images/TI_zigbee_dongle.png"/><br/>
-          <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176"> buy this from DX ($16)</a>.</p>
+          <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176">get this from DX ($16)</a>.</p>
         </div><!--col-md-4-->
 
       </div><!-- row -->
@@ -262,9 +264,11 @@ WeMo Switch 'AC' turned on.
         </header>
         <div class="container">
           <div class="row">
+              <div class="col-md-8 col-md-offset-2">
           <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
 
           <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+              </div>
           </div><!-- row -->
         </div><!-- container -->
         </section>
