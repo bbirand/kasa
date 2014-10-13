@@ -108,7 +108,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .color-b {
-  background-color: #FFDC6B;
+  /*background-color: #FFDC6B;*/
+  background-color: #94C6CA;
   /*color: #342DA3;*/
   color: black;
 }
