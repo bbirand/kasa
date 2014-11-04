@@ -1,0 +1,3 @@
+Node-related code
+Some devices are implemented under Node.js, and communicate with the broker
+using the same ZMQ interface
