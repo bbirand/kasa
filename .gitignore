@@ -12,3 +12,6 @@ misc/keys
 notebooks/.ipynb_checkpoints/
 profile/history.sqlite
 profile/security/
+
+# Node installed modules
+node/node_modules/
