@@ -10,6 +10,8 @@ from utils import raise_msg
 from IPython.utils.traitlets import Unicode, Float, List
 from sensors import ScalarSensorWidget, TupleSensorWidget
 
+from actor import ReadEvery, Echo
+
 class SensorTag(object):
 
     def __init__(self, addr):
@@ -19,6 +21,7 @@ class SensorTag(object):
         # Initiate a connection with the tag
         self._connect_to_tag()
 
+        # TODO These can be made into "class instances" a la Django
         self._contained_sensors = {'temperature': SensorTagTemperature,
                                    'magnetometer' : SensorTagMagnetometer}
 
@@ -79,8 +82,7 @@ class SensorTag(object):
     '''
     def _connect_to_tag(self):
         '''Establishes a connection to the SensorTag BT Daemon
-        Tells it to connect to the bluetooth device, and save the
-        connection socket it `self.socket`
+        Tells it to connect to the bluetooth device
         '''
         # Create local socket connection
         port = "9800"
@@ -145,6 +147,9 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         # When initiated take a first reading
         threading.Thread(target=self.read).start()
 
+    def every(self, wait=5):
+        return ReadEvery(self, wait)
+
     def _item_hash(self):
         '''
         Hash name of this object
@@ -188,7 +193,7 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
             #TODO Raise an exception?
             return None
 
-class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
+class SensorTagTemperature(ScalarSensorWidget):
 
     # Needed for the GUI
     sensor_type = Unicode("Amb. Temp", sync=True)
@@ -205,12 +210,6 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
         # the values are loading
         #self.read()
         threading.Thread(target=self.read).start()
-
-    def _item_hash(self):
-        '''
-        Hash name of this object
-        '''
-        return self.sensortag._bluetooth_addr + 'Temp'
 
     def read(self):
         ''' Return the temperature in Celsius
@@ -231,6 +230,28 @@ class SensorTagTemperature(RegularUpdateMixin, ScalarSensorWidget):
         else:
             #TODO Raise an exception?
             return None
+
+
+    def __or__(self, other):
+        ''' Shortcut for Observer pattern
+        If the temperature property is used by itself, it is 
+        ready every 30 seconds, and the result is fed on the 
+        next item.
+        '''
+        return self.every(30).subscribe(other)
+
+    def every(self, wait=5):
+        # Save this thread with the wait time
+        # Return the same value later on
+        t = ReadEvery(self, wait)
+        t.start()
+        return t
+
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._bluetooth_addr + 'Temp'
 
     def calcTmpTarget(self, objT, ambT):
 	    '''
