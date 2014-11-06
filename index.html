@@ -16,8 +16,37 @@
         <div class="animated fadeInDownShort" data-id='1' id="top-home-image"></div>
         <h1 class="animated fadeInDownShort" data-id='2'>Kasa</h1>
         <h3 class="animated fadeInDownShort" data-id='3'
-          id="top-subtitle">Powerful tools to <b>control</b> and <b>analyze</b> your home.</h3>
+          id="top-subtitle"><b>Control</b> and <b>analyze</b> your home.</h3>
         </div>
+        </section>
+
+        <section class='color-b' >
+        <header class="animatedParent animateOnce" data-appear-top-offset='-100'>
+            <h1 class="animated fadeInDownShort">Seriously? Another home automation library?</h1>
+        </header>
+        <div class="container">
+        <div class="row animatedParent animateOnce" data-appear-top-offset='-200' data-sequence='200'>
+        <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
+            <p>There are dozens of projects for switching lights on and off; but that gets boring 
+                very quickly. We are bringing the full power of the <a
+href="http://www.scipy.org/">Scientific Python</a> ecosystem into home
+automation so that you can write <b>intelligent</b> applications.
+            </p>
+        </div>
+        <div class="col-md-4 animated fadeInLeftShort" style="text-align:left;" data-id='1'>
+            <p> Seamlessly integrate your intelligent devices with these libraries: </p>
+
+            <a href="http://ipython.org"><img style="width:70px" src="images/scipy/ipynb.png"/></a>
+            <a href="http://numpy.org"><img style="width:170px" src="images/scipy/numpy.png"/></a>
+            <a href="http://scipy.org"><img style="width:120px" src="images/scipy/scipy.png"/></a>
+            <a href="http://scikit-learn.org"><img style="width:120px" src="images/scipy/scikit.png"/></a>
+        </div>
+        <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
+        </div>
+
+        </div>
+        </div>
+
         </section>
 
         <section class='color-c'>
@@ -26,14 +55,10 @@
         </header>
     <div class="container">
     <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
-     <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
-        <p class='animated fadeInDownShort' data-id='1'>Quick, interactive access to your devices</p>
-        <p class='animated fadeInDownShort' data-id='2'> We support a growing
-        number of devices that can be easily discovered, configured and made
-        available. All of this is kept behind the scenes, so all you have to
-        do is to run the discover function from within your browser.</p>
-     </div>
-     <div class="col-md-5 col-md-offset-0 col-sm-10 col-sm-offset-1">
+        <p class='animated fadeInDownShort' data-id='1'>
+        Supported devices are discovered and immediately available for interactive use from the IPython
+        shell.
+        </p>
         <pre class="code animated fadeInRightShort" data-id='3'><code class="python"># Discover supported devices in your home
 >>> kasa.discover()
 Type           Name
@@ -41,7 +66,7 @@ Type           Name
 WeMo Switch   'AC'
 SensorTag     'Living Room'
 
-# Access power switch by name
+# Access WeMo power switch by name
 >>> ac = kasa['AC']
 >>> ac.on()
 WeMo Switch 'AC' turned on.
@@ -51,7 +76,7 @@ WeMo Switch 'AC' turned on.
 >>> print temp
 'Living Room' temperature is 23.0C. 
 </code></pre>
-    </div>
+
     </div> <!-- div.row -->
     </div>
         </section>
@@ -59,19 +84,16 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-b' >
         <header class="animatedParent" data-appear-top-offset='-100'>
-            <h1 class="animated fadeInDownShort">Mobile Friendly By Design</h1>
-            <p class="animated fadeInDownShort"> Cool! But I want to access these devices from a smartphone or a tablet. </p>
+            <h1 class="animated fadeInDownShort">Your Code Is Mobile-Ready</h1>
         </header>
         <div class="container">
         <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='200'>
         <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-           <h4> View from desktop browser </h3>
-            <p> Do your development interactively form the luxury of your fullscreen browser</p>
+            <p> Develop your app interactively from the luxury of your desktop browser</p>
            <img style="width:100%" src="images/kasa_macosx.png"/>
         </div>
         <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
-           <h4> View from smartphone </h3>
-           <p>Access the site from mobile to monitor and control your devices</p>
+           <p>Use it from a mobile device without all the clutter</p>
            <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
         </div>
 
@@ -83,16 +105,15 @@ WeMo Switch 'AC' turned on.
 
         <section class='color-a'>
         <header class='animatedParent'>
-            <h1 class='animated fadeInDownShort'>Powerful Interface for Writing Code</h1>
+            <h1 class='animated fadeInDownShort'>Natural Way To Reason About Your Code</h1>
         </header>
     <div class="container">
     <div class="row animatedParent" data-sequence='300'>
      <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
         <p class='animated fadeInDownShort' data-id='1'>
-        Program your devices using extremely powerful constructs. We borrowed
-        ideas from Functional Reactive Programming and Flow-based Programming
-        to make it even easier.
-        </p>
+        <a href="http://www.reactivemanifesto.org/">Reactive programming</a> paradigms make it easy to
+        reason about your code. We built a domain-specific language over Python
+        to make it intuitive to structure your code. </p>
      </div>
      <div class="col-md-6 col-md-offset-0 col-sm-10 col-sm-offset-1">
         <pre class='code animated fadeInDownShort' data-id='2'><code class="python"># When temperature goes above 23C, turn on AC 
@@ -101,18 +122,20 @@ WeMo Switch 'AC' turned on.
 # Turn on AC at 6pm every day
 >>> when('6pm') | ac.on
 
-# Turn lights on/off randomly every 5 mins
+# Turn on/off randomly every 5 mins
 >>> every('5min')| random_binary() | ac.on</code></pre>
     </div>
     </div>
     </div>
         </section>
 
+        <!--
         <section class='color-c'>
         <header>
           <div class='animatedParent'>
               <h1 class='animated fadeInDownShort'>Analyze Your Home</h1>
           </div>
+        <div id="row">
           <p>Interface with the amazing Python scientific ecosystem</p>
         </header>
         <pre class="code"><code class="python"># Plot readings form sensor in real-time 
@@ -141,16 +164,19 @@ WeMo Switch 'AC' turned on.
 # Send text messages when something is wrong
 >>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")</code></pre>
         </section>
+        -->
 
         <section class='color-b'>
           <div class="container">
             <div class="row">
             <header>
+            <div class="col-md-8 col-md-offset-2" style="text-align: center;">
                 <h1>Supported Hardware</h1>
                 <p>
-                We fully support several hardware devices. These devices are
-                extremely easy to control via our programming interface.
+                Instead of supporting a large number of obscure devices, we
+                provide full support for a small set of devices.
                 </p>
+            </div>
             </header>
             </div>
             <div class="row">
@@ -158,8 +184,8 @@ WeMo Switch 'AC' turned on.
                 <a href="http://www.ti.com/tool/cc2541dk-sensor">
                 <img style="width:50%" src="images/ti_sensortag.png"/>
                 </a>
-                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope. It can function as an iBeacon transmitter, enabling you to do all sorts of cool things programmatically. It even has two configurable buttons.</p> 
-                <p>And all of this for $25. Batteries and shipment included!</p>
+                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope, and has two configurable buttons. It can also function as an iBeacon transmitter, enabling you to create many projects.</p> 
+                <p>And all of this for $25. Batteries and shipping included!</p>
             </div>
             <div class="col-md-4" style="text-align:center;">
                 <a href="www.amazon.com/dp/B00BB2MMNE/">
@@ -186,13 +212,13 @@ WeMo Switch 'AC' turned on.
               <img style="max-width:400px; display:block; margin: 0 auto;" src="images/raspberry_pi.png">
           </div>
           <div class="col-md-6">
-              <p>If you have a RaspberryPi, all you need to get started is our custom <a href="https://npmjs.org">image</a>. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
+              <p>If you have a RaspberryPi, all you need to get started is our custom image. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
           </div>
       </div>
 
       <div class="row">
           <div class="col-xs-12">
-              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power it up!
+              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power up RaspberryPi. Supported devices will be discovered automatically.
               </p>
           </div>
       </div>
@@ -200,20 +226,20 @@ WeMo Switch 'AC' turned on.
       <div class="row">
         <div class="col-md-4">
         <img style="width:50%;display:block; margin: 0 auto;" src="images/pluggable_bt.png"/><br/>
-        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">buy this from Amazon.com ($13)</a> <br>
+        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">get this from Amazon.com ($13)</a> <br>
         <p> This is necessary for using the SensorTag.</p>
         </div><!--col-md-4-->
 
         <div class="col-md-4">
         <img style="width:50%;display:block; margin: 0 auto;" src="images/tp_link_wifi.png"/><br/>
-        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/"> buy this from Amazon.com ($9)</a></p>
-        <p>When you plug it in, you will have your own network called
-        `kasa`.</p>
+        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/">get this from Amazon.com ($9)</a></p>
+        <p>When you plug it in, you will have your own wireless network called
+        "kasa".</p>
         </div><!--col-md-4-->
 
         <div class="col-md-4">
           <img style="width:50%;display:block; margin: 0 auto;" src="images/TI_zigbee_dongle.png"/><br/>
-          <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176"> buy this from DX ($16)</a>.</p>
+          <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176">get this from DX ($16)</a>.</p>
         </div><!--col-md-4-->
 
       </div><!-- row -->
@@ -232,15 +258,56 @@ WeMo Switch 'AC' turned on.
     </section>
 
 
+        <section class='color-b'>
+        <header>
+            <div style="text-align: center;" class="col-md-8 col-md-offset-2">
+                <h1>Sign up for news</h1>
+                <p>
+                This project is still under active development. Please sign up
+                for our mailing list below to be notified of updates.
+                </p>
+            </div>
+            
+        </header>
+   <!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/classic-081711.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{clear:left; }
+	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup" style="text-align:center;">
+<form action="//kasa.us9.list-manage.com/subscribe/post?u=e38a8a257065c6b8c4217364c&amp;id=b45a5c5963" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+<div class="mc-field-group">
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_e38a8a257065c6b8c4217364c_b45a5c5963" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+<!--End mc_embed_signup-->
+        </section>
+
+
+
         <section class='color-c'>
         <header>
-            <h2>Your Home, Your Control</h2>
+            <h1>Your Home, Your Control</h1>
         </header>
         <div class="container">
           <div class="row">
+              <div class="col-md-8 col-md-offset-2">
           <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
 
           <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+              </div>
           </div><!-- row -->
         </div><!-- container -->
         </section>
@@ -250,6 +317,10 @@ WeMo Switch 'AC' turned on.
     <script src="lib/jquery-2.1.1.min.js"></script> 
     <script src="lib/css3-animate-it.js"></script> 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+    <script>
+        $(".animatedParent").addClass("animateOnce");
+    </script>
+
     <script>hljs.initHighlightingOnLoad();</script>
 
     <!--
