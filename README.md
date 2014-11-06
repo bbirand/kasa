@@ -12,6 +12,7 @@ Installation for Mac OS X
 $ git clone git@github.com:bbirand/kasa.git
 $ cd kasa
 ```
+
 2. Set up virtualenv
 
   ```bash
