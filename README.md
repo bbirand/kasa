@@ -48,5 +48,5 @@ $ cd project_folder
 $ python daemons/broker.py &
 $ python daemons/wemo.py &
 $ $(cd node; node sensortag.js)
-$ ./ve/bin/ipython notebook "--profile-dir=./profile"
+$ ./ve/bin/ipython notebook "--profile-dir=`pwd`/profile"
 ```

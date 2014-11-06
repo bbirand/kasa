@@ -2,6 +2,10 @@
 
 c = get_config()
 
+import os 
+cur_file = os.path.dirname(os.path.realpath(__file__))
+print "Configuration is located in {}".format(cur_file)
+
 #------------------------------------------------------------------------------
 # NotebookApp configuration
 #------------------------------------------------------------------------------
@@ -73,7 +77,8 @@ c.NotebookApp.enable_mathjax = False
 
 # The directory to use for notebooks and kernels.
 #c.NotebookApp.notebook_dir = u'/Users/wimnet/kasa/notebooks'
-c.NotebookApp.notebook_dir = u'/home/pi/kasa/notebooks/'
+#c.NotebookApp.notebook_dir = u'/home/pi/kasa/notebooks/'
+c.NotebookApp.notebook_dir = "{}/../notebooks/".format(cur_file)
 
 # 
 # c.NotebookApp.file_to_run = ''
