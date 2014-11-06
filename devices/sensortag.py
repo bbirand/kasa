@@ -14,16 +14,18 @@ from actor import ReadEvery, Echo
 
 class SensorTag(object):
 
-    def __init__(self, addr):
+    def __init__(self, uuid):
         ''' Construct with BT address '''
-        self._bluetooth_addr = addr
+        self._uuid = uuid
 
         # Initiate a connection with the tag
         self._connect_to_tag()
 
         # TODO These can be made into "class instances" a la Django
         self._contained_sensors = {'temperature': SensorTagTemperature,
-                                   'magnetometer' : SensorTagMagnetometer}
+                                   'magnetometer' : SensorTagMagnetometer,
+                                   'humidity' : SensorTagHumidity,
+                                   }
 
     def __getattr__(self, name):
         '''
@@ -35,6 +37,7 @@ class SensorTag(object):
         if name not in self._contained_sensors:
             raise AttributeError(name)
 
+        # Obtain the class for the attribute, and initialize
         sensor_class = self._contained_sensors[name]
         sensor_obj = sensor_class(self)
         setattr(self, name, sensor_obj )
@@ -44,19 +47,33 @@ class SensorTag(object):
     Static Methods for discovery
     '''
     @staticmethod
-    def discover():
+    def discover(timeout=5000):
         ''' Return list of discovered sensors
+
+        Default timeout is 5s.
         '''
-        port = "9800"
+        broker_port = "9800"  #TODO: Move this to a global configuration
         context = zmq.Context().instance()
         socket = context.socket(zmq.REQ)
-        socket.connect("tcp://localhost:%s" % port)
+        socket.connect("tcp://localhost:%s" % broker_port)
 
-        socket.send('GATT active')
-        result = socket.recv().split(' ')
-        socket.close()
+        # Use poller for timeouts
+        p = zmq.Poller()
+        p.register(socket, zmq.POLLIN)
 
-        return map( lambda x: (SensorTag, x), result)
+        # Send discovery message
+        socket.send('SensorTag discover')
+
+        # Receive result or time out
+        msgs = dict(p.poll(timeout)) 
+        if socket in msgs and msgs[socket] == zmq.POLLIN:
+            result = socket.recv().split(' ')
+            socket.close()
+            return map( lambda x: (SensorTag, x), result)
+        # Socket time out
+        else:
+            socket.close()
+            return None
 
     @staticmethod
     def pretty_name():
@@ -91,32 +108,29 @@ class SensorTag(object):
         socket.connect("tcp://localhost:%s" % port)
 
         # Send the connection command
-        socket.send('GATT connect {}'.format(self._bluetooth_addr))
+        socket.send('SensorTag connect {}'.format(self._uuid))
         result = socket.recv() #TODO Add time out handling
         socket.close()
 
-        if result == 'ok':
+        if result == 'OK':
             return True
         elif result == 'fail':
             raise_msg(IOError('Cannot connect to SensorTag. Is it discoverable?'))
         else:
             raise_msg(ValueError('Unexpected response received: ' + result))
 
-    def _read_value(self, ctrl_addr = '0x29', read_addr = '0x25', enable_cmd = '01', disable_cmd = '00' , sleep_amount = 0.3):
-        ''' Uses the GATT interface to read a value
 
-        Establishes a connection via the GATT interface (and the gatttool command)
-        First writes `enable_cmd` to the address `ctrl_addr`
-        Sleeps for `sleep_amount` time, then reads the value in `read_addr` (which is returned)
-        Finally writes `disable_cmd` to `ctrl_addr`
+    def _send_cmd(self, cmd, args=[]):
+        ''' 
+        Send a custom command to the daemon
         '''
+
         port = "9800"
         context = zmq.Context().instance()
         socket = context.socket(zmq.REQ)
         socket.connect("tcp://localhost:%s" % port)
 
-        socket.send('GATT read_value {} {} {} {} {} {}'.format( self._bluetooth_addr, ctrl_addr, 
-                                                    read_addr, enable_cmd, disable_cmd, sleep_amount))
+        socket.send('SensorTag {} {} {}'.format( cmd, self._uuid, ",".join(args)))
         result = socket.recv()
         socket.close()
 
@@ -144,6 +158,9 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         # Make sure to call the super constructor for traitlets
         super(SensorTagMagnetometer, self).__init__()
 
+        # Whether we have already enabled the sensor
+        self._is_enabled = False
+
         # When initiated take a first reading
         threading.Thread(target=self.read).start()
 
@@ -154,7 +171,7 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         '''
         Hash name of this object
         '''
-        return self.sensortag._bluetooth_addr + 'Magneto'
+        return self.sensortag._uuid + 'Magneto'
 
     def calibrate(self):
         ''' Calibrate the magnetometer such that the current direction is (0,0,0) '''
@@ -171,27 +188,24 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
 
         If `with_calibrate` is True, then uses the result of the previous calibration
         '''
-
-        rval = self.sensortag._read_value(ctrl_addr = '0x4a', read_addr = '0x46', 
-                                         enable_cmd = '01', disable_cmd = '00', sleep_amount=2).split()
-
         # If calibration values aren't used
         if with_calibrate:
             calibration = self.calibration
         else:
             calibration = (0,0,0)
 
-        # Check if we returned a valid value
-        if rval != "":
-            mag_x = SensorTag.floatfromhex(rval[1] + rval[0]) * (2000./65536) * -1 - calibration[0]
-            mag_y = SensorTag.floatfromhex(rval[3] + rval[2]) * (2000./65536) * -1 - calibration[1]
-            mag_z = SensorTag.floatfromhex(rval[5] + rval[4]) * (2000./65536)      - calibration[2]
+        # If it's not already enabled, enable it
+        if not self._is_enabled:
+            rval = self.sensortag._send_cmd("enableMagnetometer")
+            if rval == "OK":
+                self._is_enabled = True
+            time.sleep(3)
 
-            self.value = (mag_x, mag_y, mag_z)
-            return self.value
-        else:
-            #TODO Raise an exception?
-            return None
+        rval = self.sensortag._send_cmd("readMagnetometer")
+        self.value = map(float,rval.split(","))
+
+        #TODO: Subtract calibration
+        return self.value
 
 class SensorTagTemperature(ScalarSensorWidget):
 
@@ -202,9 +216,12 @@ class SensorTagTemperature(ScalarSensorWidget):
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
-
+        
         # Make sure to call the super constructor for traitlets
         super(SensorTagTemperature, self).__init__()
+
+        # Whether we have already enabled the sensor
+        self._is_enabled = False
 
         # Run the read command in a thread so that the GUI can be displayed while
         # the values are loading
@@ -217,20 +234,16 @@ class SensorTagTemperature(ScalarSensorWidget):
         Uses the read_value method of SensorTag with the appropriate addresses
         '''
 
-        rval = self.sensortag._read_value(ctrl_addr = '0x29', read_addr = '0x25', 
-                                         enable_cmd = '01', disable_cmd = '00').split()
+        # If it's not already enabled, enable it
+        if not self._is_enabled:
+            rval = self.sensortag._send_cmd("enableIrTemperature")
+            if rval == "OK":
+                self._is_enabled = True
+            time.sleep(1)
 
-        # Check if we returned a valid value
-        if rval != "":
-            objT = SensorTag.floatfromhex(rval[1] + rval[0])
-            ambT = SensorTag.floatfromhex(rval[3] + rval[2])
-
-            self.value = self.calcTmpTarget(objT, ambT)
-            return self.value
-        else:
-            #TODO Raise an exception?
-            return None
-
+        rval = self.sensortag._send_cmd("readIrTemperature")
+        self.value = float(rval)
+        return self.value
 
     def __or__(self, other):
         ''' Shortcut for Observer pattern
@@ -251,35 +264,67 @@ class SensorTagTemperature(ScalarSensorWidget):
         '''
         Hash name of this object
         '''
-        return self.sensortag._bluetooth_addr + 'Temp'
+        return self.sensortag._uuid + 'Temp'
 
-    def calcTmpTarget(self, objT, ambT):
-	    '''
-	    This algorithm borrowed from 
-	    http://processors.wiki.ti.com/index.php/SensorTag_User_Guide#Gatt_Server
-	    which most likely took it from the datasheet.  I've not checked it, other
-	    than noted that the temperature values I got seemed reasonable.
-	    '''
-	    m_tmpAmb = ambT/128.0
-	    return m_tmpAmb
+class SensorTagHumidity(ScalarSensorWidget):
 
-	    Vobj2 = objT * 0.00000015625
-	    Tdie2 = m_tmpAmb + 273.15
-	    S0 = 6.4E-14            # Calibration factor
-	    a1 = 1.75E-3
-	    a2 = -1.678E-5
-	    b0 = -2.94E-5
-	    b1 = -5.7E-7
-	    b2 = 4.63E-9
-	    c2 = 13.4
-	    Tref = 298.15
-	    S = S0*(1+a1*(Tdie2 - Tref)+a2*pow((Tdie2 - Tref),2))
-	    Vos = b0 + b1*(Tdie2 - Tref) + b2*pow((Tdie2 - Tref),2)
-	    fObj = (Vobj2 - Vos) + c2*pow((Vobj2 - Vos),2)
-	    tObj = pow(pow(Tdie2,4) + (fObj/S),.25)
-	    tObj = (tObj - 273.15)
-	    #return "%.2f C" % tObj
-	    return tObj
+    # Needed for the GUI
+    sensor_type = Unicode("Humidity", sync=True)
+    sensor_unit = Unicode("%", sync=True)
+
+    def __init__(self, sensortag):
+        ''' Construct with the object of the corresponding sensortag '''
+        self.sensortag = sensortag
+        
+        # Make sure to call the super constructor for traitlets
+        super(SensorTagHumidity, self).__init__()
+
+        # Whether we have already enabled the sensor
+        self._is_enabled = False
+
+        # Run the read command in a thread so that the GUI can be displayed while
+        # the values are loading
+        #self.read()
+        threading.Thread(target=self.read).start()
+
+    def read(self):
+        ''' Return the humidity in %
+
+        Uses the read_value method of SensorTag with the appropriate addresses
+        '''
+
+        # If it's not already enabled, enable it
+        if not self._is_enabled:
+            rval = self.sensortag._send_cmd("enableHumidity")
+            if rval == "OK":
+                self._is_enabled = True
+            time.sleep(1)
+
+        rval = self.sensortag._send_cmd("readHumidity")
+        self.value = float(rval)
+
+        return self.value
+
+    def __or__(self, other):
+        ''' Shortcut for Observer pattern
+        If the temperature property is used by itself, it is 
+        ready every 30 seconds, and the result is fed on the 
+        next item.
+        '''
+        return self.every(30).subscribe(other)
+
+    def every(self, wait=5):
+        # Save this thread with the wait time
+        # Return the same value later on
+        t = ReadEvery(self, wait)
+        t.start()
+        return t
+
+    def _item_hash(self):
+        '''
+        Hash name of this object
+        '''
+        return self.sensortag._uuid + 'Humidity'
 
 def main():
     import sys
