@@ -9,10 +9,10 @@ def raise_msg(e):
     (without stack trace)
     '''
     display_html('<div class="alert alert-danger" role="alert">{}</div>'.format(e.message), raw=True)
-    raise KeyboardInterrupt()
+    #raise KeyboardInterrupt()
 
 class AlignWidget(widgets.ContainerWidget):
-    def __or__(self, other):
+    def __add__(self, other):
         self.children = self.children + (other,)
         return self
 
@@ -21,7 +21,7 @@ class AlignableWidget(object):
     Widgets that can be aligned using boolean operators
 
     '''
-    def __or__(self, other):
+    def __add__(self, other):
         ''' Overload the | operator for constructing objects'''
         container = AlignWidget()
         display(container)
