@@ -11,6 +11,3 @@ supervisor
 # for sensortag module
 pexpect
 
-# for plotting
-bokeh
-plotly
