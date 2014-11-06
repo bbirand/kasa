@@ -8,13 +8,13 @@ Installation for Mac OS X
 
 1. Clone the project
 
-```bash
+  ```bash
 $ git clone git@github.com:bbirand/kasa.git
 $ cd kasa
 ```
 2. Set up virtualenv
 
-```bash
+  ```bash
 $ virtualenv ve
 $ . ve/bin/activate
 $ pip install -r requirements.txt
