@@ -7,6 +7,23 @@ from IPython.html import widgets
 from IPython.utils.traitlets import Bool, Unicode, Float, Int
 from devices.utils import AlignableWidget
 
+from actor import Actor, ReadEvery, Echo
+
+class WeMoToggle(Actor):
+    name = "WeMoToggle"
+    def __init__(self, wemo):
+        self.wemo = wemo
+        super(WeMoToggle, self).__init__()
+
+    def loop(self):
+        last_state =  self.wemo.state()
+        while True:
+            i = yield
+            if i != last_state:
+                self.wemo.set_state(i)
+                last_state = i
+            yield i
+
 class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
     ''' Our implementation of a WeMo Switch '''
     _view_name = Unicode('WeMoSwitchView', sync=True)
@@ -88,6 +105,18 @@ class WeMoSwitch(widgets.DOMWidget, AlignableWidget):
 
         # Callback for changing value
         self.on_trait_change(self.on_value_change, 'value')
+
+    def set(self):
+        return WeMoToggle(self)
+
+    def set_state(self, new_state):
+        '''
+        Set the state of the WeMo instance
+        '''
+        if new_state:
+            self.on()
+        else:
+            self.off()
 
     def on(self):
         self._send_wemo('on {}'.format(self.name))
