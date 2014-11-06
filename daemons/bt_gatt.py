@@ -4,26 +4,38 @@ import pexpect
 
 import sys, threading, time
 
+def _st_connect_helper(gatt):
+    '''
+    Helper that tries to connect to the device 3 times
+    If a connection cannot be established at that time,
+    it raises an exception
+    '''
+    retry_num = 3
+    while (retry_num > 0):
+        try:
+            #print "Preparing to connect. You might need to press the side button..."
+            gatt.sendline('connect')
+            # test for success of connect
+            gatt.expect('\[CON\].*>', timeout=3)
+            return
+        except pexpect.TIMEOUT:
+            retry_num -= 1
+
+    # Could not connect after 3 retries, raise exception
+    print "Cannot connect to device. Is it discoverable?"
+    gatt.close(force=True)
+    raise IOError('Cannot connect')
+
 def st_connect(bluetooth_addr):
     '''
     Spawns a new pexpect call, connects, and returns the handle
     Raises IOError if cannot connect
     '''
     # Receive the bluetooth address as the first argument
-    try:
-        gatt = pexpect.spawn('gatttool -b ' + bluetooth_addr + ' --interactive')
-        gatt.expect('\[LE\]>')
-        #print "Preparing to connect. You might need to press the side button..."
-        gatt.sendline('connect')
-        # test for success of connect
-        gatt.expect('\[CON\].*>', timeout=3)
-        return gatt
-
-    except pexpect.TIMEOUT:
-        print "Cannot connect to device. Is it discoverable?"
-        gatt.close(force=True)
-        raise IOError('Cannot connect')
-
+    gatt = pexpect.spawn('gatttool -b ' + bluetooth_addr + ' --interactive')
+    gatt.expect('\[LE\]>')
+    _st_connect_helper(gatt)
+    return gatt
 
 def st_read_value(gatt, ctrl_addr, read_addr, enable_cmd, disable_cmd, sleep_amount=0.3):
     '''
@@ -44,8 +56,10 @@ def st_write(gatt, write_addr, write_value):
     gatt.sendline(' ')
     stat = gatt.expect(['\[CON\].*>', '\[   \].*>'])
     if stat == 1:
-        # We're not connected
-        raise IOError("Not connected")
+        # We're not connected, try to reconnect
+        _st_connect_helper(gatt)
+        #raise IOError("Not connected")
+
     gatt.sendline('char-write-cmd {} {}'.format(write_addr, write_value))
     stat = gatt.expect(['\[CON\].*>', '\[   \].*>'])
     if stat == 1:
