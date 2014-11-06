@@ -46,6 +46,7 @@ socket.on('message', function(client, empty, data) {
         // If we are already connected, just return OK
         if (target_uuid in currently_connected_devs) {
             socket.send([client, '', 'OK']);
+            console.log("Already connected.");
             return
         }
 
@@ -56,9 +57,9 @@ socket.on('message', function(client, empty, data) {
                 currently_connected_devs[target_uuid] = sensorTag;
                 sensorTag.discoverServicesAndCharacteristics(function(){
                     socket.send([client, '', 'OK']);
+                    console.log("Connected.");
                 });
             });
-            console.log("Connected.");
         }, target_uuid); // Connect to device with 'uuid==msg[1]'
         return
     }
@@ -101,6 +102,7 @@ socket.on('message', function(client, empty, data) {
                 console.log('\tambient temperature = %d °C', ambientTemperature.toFixed(1));
                 socket.send([client, '', ambientTemperature.toFixed(2)]);
             });
+            break;
 
         // Humidity chip
         case "enableHumidity":
@@ -117,8 +119,27 @@ socket.on('message', function(client, empty, data) {
             sensorTag.readHumidity(function(temp, humidity) {
                 console.log('\ttemperature = %d °C', temp.toFixed(2));
                 console.log('\thumidity = %d °C', humidity.toFixed(2));
-                socket.send([client, '', humidity.toFixed(2) + "," + temp.toFixed(2)]);
+                socket.send([client, '', humidity.toFixed(2)]); // + "," + temp.toFixed(2)]);
             });
+            break;
+
+        // Barometric Pressure chip
+        case "enableBarometricPressure":
+            sensorTag.enableBarometricPressure(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "disableBarometricPressure":
+            sensorTag.disableBarometricPressure(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "readBarometricPressure":
+            sensorTag.readBarometricPressure(function(pressure) {
+                console.log('\tpressure = %d °C', pressure.toFixed(12));
+                socket.send([client, '', pressure.toFixed(2)]);
+            });
+            break;
 
         // Magnetometer chip
         case "enableMagnetometer":
@@ -133,9 +154,46 @@ socket.on('message', function(client, empty, data) {
             break;
         case "readMagnetometer":
             sensorTag.readMagnetometer(function(x,y,z) {
-                console.log('\treading = %d,%d,%d', x.toFixed(2), y.toFixed(2), z.toFixed(2));
+                console.log('\tmagnetometer = %d,%d,%d', x.toFixed(2), y.toFixed(2), z.toFixed(2));
                 socket.send([client, '', [x,y,z].join() ]);
             });
+            break;
+
+        // Accelerometer chip
+        case "enableAccelerometer":
+            sensorTag.enableAccelerometer(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "disableAccelerometer":
+            sensorTag.disableAccelerometer(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "readAccelerometer":
+            sensorTag.readAccelerometer(function(x,y,z) {
+                console.log('\taccelerometer = %d,%d,%d', x.toFixed(2), y.toFixed(2), z.toFixed(2));
+                socket.send([client, '', [x,y,z].join() ]);
+            });
+            break;
+
+        // Gyroscope chip
+        case "enableGyroscope":
+            sensorTag.enableGyroscope(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "disableGyroscope":
+            sensorTag.disableGyroscope(function() {
+                socket.send([client, '', 'OK']);
+            });
+            break;
+        case "readGyroscope":
+            sensorTag.readGyroscope(function(x,y,z) {
+                console.log('\tgyroscope = %d,%d,%d', x.toFixed(2), y.toFixed(2), z.toFixed(2));
+                socket.send([client, '', [x,y,z].join() ]);
+            });
+            break;
     }
 
 });
