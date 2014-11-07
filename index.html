@@ -1,352 +1,321 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Kasa - Control your devices</title>
-        <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <!--<link href="lib/animate.min.css" rel="stylesheet">-->
-        <link href="lib/animations.css" rel="stylesheet">
-        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
-        <link href="style.css" rel="stylesheet" type="text/css" charset="utf-8"/>
-    </head>
-    <body>
+<html lang="en">
 
-        <section id="top-section" class='color-a animatedParent animateOnce' data-sequence='300'>
-        <div class='vertical-align'>
-        <div class="animated fadeInDownShort" data-id='1' id="top-home-image"></div>
-        <h1 class="animated fadeInDownShort" data-id='2'>Kasa</h1>
-        <h3 class="animated fadeInDownShort" data-id='3'
-          id="top-subtitle"><b>Control</b> and <b>analyze</b> your home.</h3>
-        </div>
-        </section>
+<head>
 
-        <section class='color-b' >
-        <header class="animatedParent animateOnce" data-appear-top-offset='-100'>
-            <h1 class="animated fadeInDownShort">Seriously? Another home automation library?</h1>
-        </header>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Kasa - Your have the power to control your home</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header style="position: absolute; top: 0; left: 0; width:100%;">
+    <div class="wrapper" style="max-width: 1140px; margin: 0 auto; position: relative;">
+        <a id="logo" href="/" style="text-decoration: none; position: ">Kasa</a>
+    </div>
+    </header>
+
+    <!-- Welcome screen -->
+    <div class="intro-header">
+
         <div class="container">
-        <div class="row animatedParent animateOnce" data-appear-top-offset='-200' data-sequence='200'>
-        <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-            <p>There are dozens of projects for switching lights on and off; but that gets boring 
-                very quickly. We are bringing the full power of the <a
-href="http://www.scipy.org/">Scientific Python</a> ecosystem into home
-automation so that you can write <b>intelligent</b> applications.
-            </p>
-        </div>
-        <div class="col-md-4 animated fadeInLeftShort" style="text-align:left;" data-id='1'>
-            <p> Seamlessly integrate your intelligent devices with these libraries: </p>
 
-            <a href="http://ipython.org"><img style="width:70px" src="images/scipy/ipynb.png"/></a>
-            <a href="http://numpy.org"><img style="width:170px" src="images/scipy/numpy.png"/></a>
-            <a href="http://scipy.org"><img style="width:120px" src="images/scipy/scipy.png"/></a>
-            <a href="http://scikit-learn.org"><img style="width:120px" src="images/scipy/scikit.png"/></a>
-        </div>
-        <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
-        </div>
-
-        </div>
-        </div>
-
-        </section>
-
-        <section class='color-c'>
-        <header class='animatedParent' data-appear-top-offset='-100'>
-            <h1 class="animated fadeInDownShort">Discover and Control Your Devices</h1>
-        </header>
-    <div class="container">
-    <div class="row animatedParent" data-sequence='300' data-appear-top-offset='-100'>
-        <p class='animated fadeInDownShort' data-id='1'>
-        Supported devices are discovered and immediately available for interactive use from the IPython
-        shell.
-        </p>
-        <pre class="code animated fadeInRightShort" data-id='3'><code class="python"># Discover supported devices in your home
->>> kasa.discover()
-Type           Name
-----------------------------
-WeMo Switch   'AC'
-SensorTag     'Living Room'
-
-# Access WeMo power switch by name
->>> ac = kasa['AC']
->>> ac.on()
-WeMo Switch 'AC' turned on.
-
-# Access the temperature sensor
->>> temp = kasa['Living Room'].temperature
->>> print temp
-'Living Room' temperature is 23.0C. 
-</code></pre>
-
-    </div> <!-- div.row -->
-    </div>
-        </section>
-
-
-        <section class='color-b' >
-        <header class="animatedParent" data-appear-top-offset='-100'>
-            <h1 class="animated fadeInDownShort">Your Code Is Mobile-Ready</h1>
-        </header>
-        <div class="container">
-        <div class="row animatedParent" data-appear-top-offset='-200' data-sequence='200'>
-        <div class="col-md-4 col-md-offset-2 animated fadeInLeftShort" style="text-align:right;" data-id='1'>
-            <p> Develop your app interactively from the luxury of your desktop browser</p>
-           <img style="width:100%" src="images/kasa_macosx.png"/>
-        </div>
-        <div class="col-md-4 animated fadeInRightShort" style="text-align: left;" data-id='2' >
-           <p>Use it from a mobile device without all the clutter</p>
-           <img style="width:55%;display: block; margin: 0 auto;" src="images/kasa_iphone.png"/>
-        </div>
-
-        </div>
-        </div>
-
-        </section>
-
-
-        <section class='color-a'>
-        <header class='animatedParent'>
-            <h1 class='animated fadeInDownShort'>Natural Way To Reason About Your Code</h1>
-        </header>
-    <div class="container">
-    <div class="row animatedParent" data-sequence='300'>
-     <div class="col-md-offset-2 col-md-4 col-sm-10 col-sm-offset-1">
-        <p class='animated fadeInDownShort' data-id='1'>
-        <a href="http://www.reactivemanifesto.org/">Reactive programming</a> paradigms make it easy to
-        reason about your code. We built a domain-specific language over Python
-        to make it intuitive to structure your code. </p>
-     </div>
-     <div class="col-md-6 col-md-offset-0 col-sm-10 col-sm-offset-1">
-        <pre class='code animated fadeInDownShort' data-id='2'><code class="python"># When temperature goes above 23C, turn on AC 
->>> (temp > 23) | ac.on
-
-# Turn on AC at 6pm every day
->>> when('6pm') | ac.on
-
-# Turn on/off randomly every 5 mins
->>> every('5min')| random_binary() | ac.on</code></pre>
-    </div>
-    </div>
-    </div>
-        </section>
-
-        <!--
-        <section class='color-c'>
-        <header>
-          <div class='animatedParent'>
-              <h1 class='animated fadeInDownShort'>Analyze Your Home</h1>
-          </div>
-        <div id="row">
-          <p>Interface with the amazing Python scientific ecosystem</p>
-        </header>
-        <pre class="code"><code class="python"># Plot readings form sensor in real-time 
->>> temp.plot()
-## Plot of the temperature, printed in IPython
-
-# Save readings every 15 seconds
->>> temp.store('temp', every=15)
-
-# Read historical values
->>> val = kasa.read('temp')
-# Pandas DataFrame for manipulating, plotting, histogramming, correlations, intro to scikit</code></pre>
-        </section>
-
-        <section class='color-a'>
-        <header>
-            <h1>Social Batteries Included</h1>
-            <p>Create social applications with built-in integration with Twilio, Facebook, and Twitter.</p>
-        </header>
-        <pre class="code"><code class="python"># Post temperature on Twitter every day
->>> temp.every('day') | twitter.post("The temperature outside is {}")
-
-# Let your friends know when you are home
->>> motion_sensor | facebook.post("I just got home!")
-
-# Send text messages when something is wrong
->>> (temp > 25) | twilio.sms("The temperature at home is too high! ({})")</code></pre>
-        </section>
-        -->
-
-        <section class='color-b'>
-          <div class="container">
             <div class="row">
-            <header>
-            <div class="col-md-8 col-md-offset-2" style="text-align: center;">
-                <h1>Supported Hardware</h1>
-                <p>
-                Instead of supporting a large number of obscure devices, we
-                provide full support for a small set of devices.
-                </p>
+                <div class="col-lg-12">
+                    <div class="intro-message">
+                      <h1>Kasa puts <em style="color:#ff7600">you</em> in control.<br/>
+                        After all, it's <em style="color:#ff7600">your</em> smart home.</h1>
+                      <div class="row">
+                        <div class="col-lg-7">
+                        <h3>Kasa is an interactive programming environment that lets you understand your home. By using off-the-shelf devices, you can bring intelligence into your home, the way you want it. </h3>
+                        </div><!--col-lg-7-->
+                      </div><!--row-->
+                      <div class="row">
+                        <div class="col-sm-5 col-lg-3 col-xs-8">
+                        <button type="button" id="get_started" class="btn btn-default">
+                          <i style="margin-right:10px" class="fa fa-chevron-circle-right"></i>
+                          Get Started!
+                        </button>
+                        </div>
+                      </div><!--row-->
+                    </div>
+                </div>
             </div>
-            </header>
-            </div>
-            <div class="row">
-            <div class="col-md-4 col-md-offset-2" style="text-align: center;">
-                <a href="http://www.ti.com/tool/cc2541dk-sensor">
-                <img style="width:50%" src="images/ti_sensortag.png"/>
-                </a>
-                <p>The SensorTag has all the sensors you need to get started. Its sensors include a temperature sensor, a barometer, a magnetometer, and a gyroscope, and has two configurable buttons. It can also function as an iBeacon transmitter, enabling you to create many projects.</p> 
-                <p>And all of this for $25. Batteries and shipping included!</p>
-            </div>
-            <div class="col-md-4" style="text-align:center;">
-                <a href="www.amazon.com/dp/B00BB2MMNE/">
-                <img style="width:30%" src="images/wemo.png"/>
-                </a>
-                <p>The WeMo allows you to control most devices by turning their power on or off. It works especially well with cheap and old devices that have as little electronics as possible. Things like ACs, electric heaters, and kettles.</p>
-                <p> Costs $50 </p>
-            </div>
-            </div><!--row-->
-          </div><!--container-->
-        </section>
 
+        </div>
+        <!-- /.container -->
 
-      <section class='color-a'>
-        <div class="container">
-          <div class="row">
-          <header>
-             <h1>I'm Sold. What Do I Need?</h1>
-          </header>
-          </div>
-
-      <div class="row">
-          <div class="col-md-6" style="text-align: right;">
-              <img style="max-width:400px; display:block; margin: 0 auto;" src="images/raspberry_pi.png">
-          </div>
-          <div class="col-md-6">
-              <p>If you have a RaspberryPi, all you need to get started is our custom image. Burn it to an SD card and plug it in. Welcome to the world of Kasa!</p>
-          </div>
-      </div>
-
-      <div class="row">
-          <div class="col-xs-12">
-              <p style="text-align:justify;">Once you have the base system running, you can add wireless connectivity using the modules below. These are all pre-configured, so all you need is to plug them in and power up RaspberryPi. Supported devices will be discovered automatically.
-              </p>
-          </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-        <img style="width:50%;display:block; margin: 0 auto;" src="images/pluggable_bt.png"/><br/>
-        <p> For Bluetooth, <a href="http://www.amazon.com/Plugable-Bluetooth-Adapter-Windows-Compatible/dp/B009ZIILLI">get this from Amazon.com ($13)</a> <br>
-        <p> This is necessary for using the SensorTag.</p>
-        </div><!--col-md-4-->
-
-        <div class="col-md-4">
-        <img style="width:50%;display:block; margin: 0 auto;" src="images/tp_link_wifi.png"/><br/>
-        <p>For WiFi, <a href="http://www.amazon.com/TP-LINK-TL-WN725N-Wireless-Adapter-Miniature/dp/B008IFXQFU/">get this from Amazon.com ($9)</a></p>
-        <p>When you plug it in, you will have your own wireless network called
-        "kasa".</p>
-        </div><!--col-md-4-->
-
-        <div class="col-md-4">
-          <img style="width:50%;display:block; margin: 0 auto;" src="images/TI_zigbee_dongle.png"/><br/>
-          <p>For ZigBee, <a href="http://www.dxsoul.com/product/ti-cc2531-usb-dongle-zigbee-adapter-deep-blue-901294176">get this from DX ($16)</a>.</p>
-        </div><!--col-md-4-->
-
-      </div><!-- row -->
-    </div><!-- container -->
-
-          <br>
-
-          <!--
-          <h3>Devices:</h3><br>
-
-          WeMo $(50)<br>
-          <ul>
-              <li>Control things that are plugged in to power</li>
-              <li></li>
-          -->
-    </section>
-
-
-        <section class='color-b'>
-        <header>
-            <div style="text-align: center;" class="col-md-8 col-md-offset-2">
-                <h1>Sign up for news</h1>
-                <p>
-                This project is still under active development. Please sign up
-                for our mailing list below to be notified of updates.
-                </p>
-            </div>
-            
-        </header>
-   <!-- Begin MailChimp Signup Form -->
-<link href="//cdn-images.mailchimp.com/embedcode/classic-081711.css" rel="stylesheet" type="text/css">
-<style type="text/css">
-	#mc_embed_signup{clear:left; }
-	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-</style>
-<div id="mc_embed_signup" style="text-align:center;">
-<form action="//kasa.us9.list-manage.com/subscribe/post?u=e38a8a257065c6b8c4217364c&amp;id=b45a5c5963" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-    <div id="mc_embed_signup_scroll">
-<div class="mc-field-group">
-	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-</div>
-	<div id="mce-responses" class="clear">
-		<div class="response" id="mce-error-response" style="display:none"></div>
-		<div class="response" id="mce-success-response" style="display:none"></div>
-	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-    <div style="position: absolute; left: -5000px;"><input type="text" name="b_e38a8a257065c6b8c4217364c_b45a5c5963" tabindex="-1" value=""></div>
-    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
     </div>
-</form>
-</div>
-<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
-<!--End mc_embed_signup-->
-        </section>
+    <!-- /.intro-header -->
 
-
-
-        <section class='color-c'>
-        <header>
-            <h1>Your Home, Your Control</h1>
-        </header>
+    <!-- Page Content -->
+    <div class="content-section-b">
         <div class="container">
-          <div class="row">
-              <div class="col-md-8 col-md-offset-2">
-          <p>We think you should have full control over the devices you own. We believe that any software that accesses your devices should be open-source. And nobody but you should have access to your data.</p>
+          <div class="row center_aligned">
+               <div class="col-md-8 col-md-offset-2">
+                  <h2 class="section-heading">Simple and Intuitive Interface</h2>
+                  <p class="lead"> This is the text that will be at the very center Turn your 2D designs into high quality, 3D product shots in seconds using free Photoshop actions by <a target="_blank" href="http://www.psdcovers.com/">PSDCovers</a>! Visit their website to download some of their awesome, free photoshop actions!</p>
+                  <img class="img-responsive" src="img/dog.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /.content-section-b -->
 
-          <p>This is why we built Kasa, a system that puts you in control. There is no cloud component, no need to open up ports on your router, no closed-source code that runs in your apartment. It's your home; you should control it.</p>
+    <div class="content-section-a">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Idea to Prototype in Minutes</h2>
+                    <p class="lead">Use our interactive SDK to discover and interact with a large number of compatible devices. We do the hard work of talking to them.
+                    </p>
+                </div>
+                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                    <img class="img-responsive" src="img/ipad.png" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+    <div class="content-section-b">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading"> Graphical Interfaces are Everywhere
+                    </h2>
+                    <p class="lead">
+                   Create beautiful graphical user interfaces using very simple code statements. Best of all, your apps are already mobile-optimized! 
+                    </p>
+                </div>
+                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
+                    <img class="img-responsive" src="img/dog.png" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-b -->
+
+    <div class="content-section-a">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading"> Powerful Data Analytics Tools </h2>
+                    <p class="lead">
+                    Plot values over time, and run sophisticated data analysis tools. All from the same programming environment.
+                    </p>
+                </div>
+                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                    <img class="img-responsive" src="img/phones.png" alt="">
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-a -->
+
+    <div class="content-section-b">
+
+        <div class="container">
+
+            <div class="row" style="text-align:center;">
+               <div class="col-md-8 col-md-offset-2">
+                  <h2 class="section-heading">Wait, there's more!</h2>
+                </div>
+            </div>
+
+            <div class="row" style="text-align: center;">
+              <div class="col-md-4 paddedSnippet">
+                <h4> You own your data </h4>
+                <p> We do not force you to use any cloud service. You decide where your data is stored - in the privacy of your home or in the cloud. </p>
               </div>
-          </div><!-- row -->
-        </div><!-- container -->
-        </section>
+              <div class="col-md-4 paddedSnippet">
+                <h4> Secure, private remote access </h4>
+                <p> Access your apps from outside your home using our proxy
+                server. All your data is encrypted end-to-end, so we don’t see or store any of it.  </p>
+              </div>
+              <div class="col-md-4 paddedSnippet">
+                <h4> Large number of sample projects </h4>
+                <p> Look through our large collection of sample projects to see what can be built using Kasa.  </p>
+              </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.content-section-b -->
+
+    <div class="banner">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Sign up to our mailing list</h2>
+                </div>
+                <div class="col-sm-4">
+                  <button type="button" id="get_started" class="btn btn-default">
+                    <i style="margin-right:10px" class="fa fa-chevron-circle-right"></i>
+                    Get Started!
+                  </button>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.banner -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="copyright text-muted small">Copyright &copy; Kasa 2014. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <a href="https://github.com/bbirand/kasa"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
 
-    <script src="lib/jquery-2.1.1.min.js"></script> 
-    <script src="lib/css3-animate-it.js"></script> 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
-    <script>
-        $(".animatedParent").addClass("animateOnce");
-    </script>
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
 
-    <script>hljs.initHighlightingOnLoad();</script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
 
-    <!--
+    <!-- vex -->
+    <script src="js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-default';</script>
+    <link rel="stylesheet" href="css/vex.css" />
+    <link rel="stylesheet" href="css/vex-theme-default.css" />
+    <style>
+      .vex-dialog-button-primary {
+        background-color: #ff7600;
+        color: white;
+      }
+    </style>
     <script>
-        $(function() {
-            console.log("initial height: " + $('#top-section').height());
-            console.log("window size : " + $(window).height());
-            console.log("initial scrollTop: " + $(document).scrollTop());
+        function open_vex_dialog() {
+         if (_ouibounce) {
+           _ouibounce.disable();
+         }
+
+         vex.dialog.open({
+          message: 'We are launching soon!<br/> Please sign-up to our mailing list to be notified of updates.',
+          input: '<input type="email" value="" placeholder="E-mail" id="mce-EMAIL" class="vex-dialog-prompt-input" name="EMAIL"><label for="mce-EMAIL"></label>',
+          className: 'vex-theme-default mcEmail',
+          callback: function(value) {
+              if (value) {
+                $.ajax({
+                    type: 'GET', //$form.attr('method'),
+                    url: 'http://kasa.us9.list-manage.com/subscribe/post-json?u=e38a8a257065c6b8c4217364c&id=b45a5c5963&c=?', //$form.attr('action'),
+                    data: $('.mcEmail form').serialize(),
+                    cache       : false,
+                    dataType    : 'json',
+                    contentType: "application/json; charset=utf-8",
+                    error       : function(err) { alert("Could not connect to the registration server. Please try again later."); },
+                    success     : function(data) {
+                        if (data.result != "success") {
+                          // Something went wrong, do something to notify the user. maybe alert(data.msg);
+                          vex.dialog.alert('We could not sign you up to our mailing for this reason:<br/>' + data.msg+"<br/>Please try again..");
+                        } else {
+                        vex.dialog.alert('Thanks for signing up, we\'ll let you know when we are ready!<br/>You can also check out our <a target="_blank" href="https://github.com/bbirand/kasa/">GitHub repository</a>.');
+                        }
+                    }
+                });
+              }
+              return console.log(value);
+            }
         });
-        $(document).scroll(function() {
-            $('#top-section').height( $(window).height() - $(document).scrollTop() - 180 );
-            console.log( $(window).height() - $(document).scrollTop() );
+      };
 
-        });
+    $('button#get_started').click(open_vex_dialog);
     </script>
-    -->
+
+    <!-- ouibounce -->
+    <script src="js/ouibounce.min.js"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
-       Date();a=s.createElement(o),
-         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-           })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-54098613-1', 'auto');
-      ga('send', 'pageview');
+      var _ouibounce = ouibounce(false, {
+        callback: function() {open_vex_dialog();},
+        aggressive: true
+      });
     </script>
+    
+    <!-- MailChimp 
+    <script src="js/jquery.ajaxchimp.js"></script>-->
+    <script>
+    $(document).ready( function () {
+    // I only have one form on the page but you can be more specific if need be.
+    var $form = $('.mcEmail form');
+    console.log($form);
 
-    </body>
+    if ( $form.length > 0 ) {
+            $('.mcEmail form input[type="submit"]').bind('click', function ( event ) {
+                console.log("Clicked submit");
+                if ( event ) event.preventDefault();
+                // validate_input() is a validation function I wrote
+                // you'll have to substitute this with your own.
+                if ( validate_input($form) ) { register($form); }
+            });
+        }
+    });
+
+    function validate_input($form) {
+       return true;
+    }
+
+    function register($form) {
+    }
+</script>
+
+</body>
 
 </html>
