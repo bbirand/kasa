@@ -21,6 +21,10 @@
     <link href="font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
+    <!-- Prism Syntax Highlighting -->
+    <link href="css/prism.css" rel="stylesheet">
+
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -100,7 +104,16 @@
                     </p>
                 </div>
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="img/ipad.png" alt="">
+                    <!--<img class="img-responsive" src="img/ipad.png" alt="">-->
+<pre><code class='language-python' style="font-size:1.2em;margin-top:30px;font-weight:normal;"># When temperature goes above 23C, turn on AC 
+>>> (temp > 23) | ac.on
+
+# Turn on AC at 6pm every day
+>>> when('6pm') | ac.on
+
+# Turn on/off randomly every 5 mins
+>>> every('5min')| random_binary() | ac.on
+</code></pre>
                 </div>
             </div>
 
@@ -231,6 +244,9 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+
+    <!-- Prism Syntax Highlighting -->
+    <script src="js/prism.js"></script>
 
     <!-- Typer -->
     <script src="js/jquery.typer.js"></script>
