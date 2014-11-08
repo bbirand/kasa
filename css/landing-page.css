@@ -8,6 +8,16 @@
   margin-bottom: 0px;
 }
 
+#logo {
+  text-decoration: none;
+  display: inline-block;
+  width: 160px;
+  height:57px;
+  background-image : url("../img/kasa_b.jpg");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+
 button#get_started {
   width: 100%;
   font-size:1.5em;
@@ -97,7 +107,7 @@ h6 {
 
     .intro-message  h3 {
         font-size: 1.5em;
-        line-height: 120%;
+        line-height: 130%;
         display: none;
     }
 
