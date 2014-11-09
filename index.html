@@ -256,7 +256,10 @@
     <script src="js/jquery.typer.js"></script>
     <script>
     $(function(){
-        $('[data-typer-targets]').typer({typerInterval:3000});
+        $('[data-typer-targets]').typer({
+          typerInterval:5000, 
+          sequentialType : true
+          });
     });
     </script>
 
