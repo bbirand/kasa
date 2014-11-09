@@ -48,6 +48,12 @@
  * @static
  */
 
+// Hide toolbar by default
+$([IPython.events]).on("app_initialized.NotebookApp", function () {
+    $('div#maintoolbar').hide();
+});
+
+
 //$([IPython.events]).on('notebook_loaded.Notebook', function(){
 //    console.log("Hellow from ipython");
 //});
@@ -114,10 +120,16 @@ require(["widgets/js/widget"], function(WidgetManager){
     function display_content(w) {
         str = '<div class="values">';
         tuple = w.model.get('value');
+        var i = 1
         for (x in tuple) {
             str += '<span class="value">' + tuple[x].toFixed(2) + '</span>';
-            str += '<span class="unit">' + w.model.get('sensor_unit') + '</span><br/>';
+            //str += '<span class="unit">' + w.model.get('sensor_unit') + '</span>';
+            if (i < tuple.length) {
+                str += ', ';
+            }
+            i++;
         }
+        str += '<span class="unit">' + w.model.get('sensor_unit') + '</span>';
         str += '</div>';
 
         str += '<span class="type">' + w.model.get('sensor_type') + '</span>';
