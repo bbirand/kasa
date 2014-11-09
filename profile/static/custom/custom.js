@@ -213,8 +213,7 @@ require(["widgets/js/widget"], function(WidgetManager){
 require(["widgets/js/widget"], function(WidgetManager) {
 
     function display_content(w) {
-        astr = "<span class='description'>" + w.model.get('description') + "</span>";
-        astr += "<br/><span class='status'>";
+        astr = "<span class='status'>";
         if (w.model.get('value')) {
             astr += 'On';  
         }
@@ -222,6 +221,8 @@ require(["widgets/js/widget"], function(WidgetManager) {
             astr += 'Off';
         }
         astr += "</span>";
+        astr += "<br/><span class='description'>" + w.model.get('description') + "</span>";
+
         return astr
     }
     

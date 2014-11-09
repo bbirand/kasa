@@ -31,16 +31,34 @@ div.prompt {
     font-family: 'Source Code Pro', monospace ;
 }
 
+
 /*
  * WeMo Switch styling
  */
 div.wemo {
    height:70px;
-   text-align: center;
-   min-width: 70px;
-   width:70px;
-   padding: 10px;
-   border: 1px solid black;
+   min-width: 140px;
+   background-color: #3392d4;
+   padding:10px 30px;
+   line-height: normal;
+   font-family: 'Open Sans', sans-serif;
+   font-weight: 300;
+   margin: 2px;
+
+   background-image: url('/static/custom/images/wemo.png');
+   background-repeat: no-repeat;
+   background-position: 80% 50%;
+}
+
+
+div.wemo span.status {
+   font-size:36px;
+   color: white;
+}
+
+div.wemo span.description {
+   font-size:20px;
+   color: white;
 }
 
 /* 

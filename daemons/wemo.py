@@ -39,7 +39,7 @@ def main():
     socket = context.socket(zmq.DEALER)
     # Specify unique identity
     socket.setsockopt(zmq.IDENTITY, b"WeMo")
-    socket.connect("tcp://*:%s" % port)
+    socket.connect("tcp://127.0.0.1:%s" % port)
 
     print "Ready to receive"
 
