@@ -103,6 +103,10 @@ h6 {
         padding-bottom: 15%;
     }
 
+    span.more_icons {
+      display: none;
+    }
+
     .intro-message > h1 {
         font-size: 2em;
     }
