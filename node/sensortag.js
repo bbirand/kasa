@@ -32,6 +32,13 @@ socket.on('message', function(client, empty, data) {
     // Discover command
     if (msg[0] == "discover") {
         console.log("Discover");
+        // First send list of currently connected devices, if any
+        for (var k in currently_connected_devs) {
+            console.log("Already connected to " + k);
+            socket.send([client, '', k]);
+        }
+
+        // Then actually run the discovery routine
         SensorTag.discover(function(sensorTag) {
             console.log("Discovered: " + sensorTag);
             socket.send([client, '', sensorTag['uuid']]);
