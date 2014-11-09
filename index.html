@@ -50,12 +50,26 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-message">
+                      <h1>
+                      Kasa lets you analyze and <br/>
+                      control your smart <span id="rolling_text">home</span>.
+                      </h1>
+                      <!--
                       <h1>Kasa puts <em style="color:#ff7600">you</em> in control.<br/>
                         After all, it's <em style="color:#ff7600">your</em>
-                        <span data-typer-targets='smart home,light,thermostat,lock'></span>.</h1>
+                        smart <span data-typer-targets='home,light,thermostat,lock'></span>.
+                      </h1>-->
                       <div class="row">
                         <div class="col-lg-7">
-                        <h3>Kasa is an interactive programming environment that lets you understand your home. By using off-the-shelf devices, you can bring intelligence into your home, the way you want it. </h3>
+                        <h3>Kasa is an interactive programming environment for
+                          your smart home.
+                          Using standard hardware and simple commands, you
+                          can get your home to do anything you want.
+                          <!--that lets you understand your home. By using
+                              off-the-shelf devices, you can bring
+                              intelligence into your home, the way you want
+                              it.-->
+                        </h3>
                         </div><!--col-lg-7-->
                       </div><!--row-->
                       <div class="row">
@@ -256,10 +270,10 @@
     <script src="js/jquery.typer.js"></script>
     <script>
     $(function(){
-        $('[data-typer-targets]').typer({
-          typerInterval:5000, 
-          sequentialType : true
-          });
+        setTimeout(function() {$('#rolling_text').typeTo('lights');}, 3000);
+        setTimeout(function() {$('#rolling_text').typeTo('locks');}, 6000);
+        setTimeout(function() {$('#rolling_text').typeTo('thermostat');}, 9000);
+        setTimeout(function() {$('#rolling_text').css('color','#ff7600').typeTo('home');}, 12000);
     });
     </script>
 
