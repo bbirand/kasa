@@ -342,29 +342,40 @@
     <!-- MailChimp 
     <script src="js/jquery.ajaxchimp.js"></script>-->
     <script>
-    $(document).ready( function () {
-    // I only have one form on the page but you can be more specific if need be.
-    var $form = $('.mcEmail form');
-    console.log($form);
+        $(document).ready( function () {
+        // I only have one form on the page but you can be more specific if need be.
+        var $form = $('.mcEmail form');
+        console.log($form);
 
-    if ( $form.length > 0 ) {
-            $('.mcEmail form input[type="submit"]').bind('click', function ( event ) {
-                console.log("Clicked submit");
-                if ( event ) event.preventDefault();
-                // validate_input() is a validation function I wrote
-                // you'll have to substitute this with your own.
-                if ( validate_input($form) ) { register($form); }
-            });
+        if ( $form.length > 0 ) {
+                $('.mcEmail form input[type="submit"]').bind('click', function ( event ) {
+                    console.log("Clicked submit");
+                    if ( event ) event.preventDefault();
+                    // validate_input() is a validation function I wrote
+                    // you'll have to substitute this with your own.
+                    if ( validate_input($form) ) { register($form); }
+                });
+            }
+        });
+
+        function validate_input($form) {
+           return true;
         }
-    });
 
-    function validate_input($form) {
-       return true;
-    }
+        function register($form) {
+        }
+    </script>
 
-    function register($form) {
-    }
-</script>
+    <!-- GA -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+         Date();a=s.createElement(o),
+           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-54098613-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
 </body>
 
