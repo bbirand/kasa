@@ -28,10 +28,10 @@ class Kasa(object):
 
         from IPython.display import HTML
 
-        ht = """<table>
+        ht = """<div class="discovered"><table class="flat-table flat-table-3">
         <tr>
-        <th>Type</th>
         <th>Name</th>
+        <th>Type</th>
         </tr>
         """
 
@@ -40,9 +40,9 @@ class Kasa(object):
         #print "-----------------"
         for i in self.devs:
             #print template.format(i[0].pretty_name(), i[1])
-            ht += "<tr><td>{}</td><td>{}</td></tr>".format(i[0].pretty_name(), i[1])
+            ht += "<tr><td>{}</td><td>{}</td></tr>".format(i[1], i[0].pretty_name())
 
-        ht += "</table>"
+        ht += "</table></div>"
         return HTML(ht)
 
     def discover(self, pprint = True):
