@@ -205,7 +205,9 @@ div#notebook {
 .flat-table {
     margin-bottom: 20px;
     border-collapse:collapse;
-    font-family: 'Lato', Calibri, Arial, sans-serif;
+    /*font-family: 'Lato', Calibri, Arial, sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
     border: none;
             border-radius: 3px;
            -webkit-border-radius: 3px;
