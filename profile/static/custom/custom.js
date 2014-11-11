@@ -70,15 +70,25 @@ function simplify_design(){
     // Remove some of the unnecessary elements
     $('div#maintoolbar').css('display','none');
     $('button.close').css('display','none');
+    $('div#menubar-container').css('display','none');
+
+    $('div#header').css('display', 'none');
+    //$('div#header').hide();
+
+    //$('div.prompt').css('display', 'none');
+    //$('div.prompt').hide();
+    
+    $('div#pager_splitter').hide();
+
     //$('div.input').css('display','none');
     $('div.input').hide();
-    $('div#menubar-container').css('display','none');
-    $('div#header').hide();
-    $('div.prompt').hide();
-    $('div#pager_splitter').hide();
 
     // Also remove border from selected cell
     $('div.cell.selected').css('border','none');
+
+    // Create CSS rules so that future elements are also affected
+    var style = $('<style>div.prompt { display: none; }</style>');
+    $('html > head').append(style);
 }
 
 function style_home() {
@@ -97,7 +107,8 @@ function style_home() {
 
 // Remove the unnecessary stuff as early as possible
 $(document).ready(function(){
-    if (document.location.pathname == "/tree" && document.location.search == "?hide") {
+    //if (document.location.pathname == "/tree" && document.location.search == "?hide") {
+    if (document.location.search == "?hide") {
       simplify_design();
     }
 });

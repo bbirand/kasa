@@ -199,6 +199,22 @@ div#notebook {
 
 
 /*
+ * Header styles
+ *
+ */
+h1.kasa {
+   font-family: 'Open Sans', sans-serif;
+   font-size:36px;
+   font-weight: 300;
+
+   color: white;
+   background-color: #3392d4;
+   padding: 10px 30px;
+   margin: 2px;
+}
+
+
+/*
  * Table styles
  *
  */
@@ -220,14 +236,14 @@ div#notebook {
 .flat-table th {
     font-weight: normal;
     -webkit-font-smoothing: antialiased;
-    padding: 1em;
+    padding: 10px
     color: rgba(0,0,0,0.45);
     text-shadow: 0 0 1px rgba(0,0,0,0.1);
     font-size: 1.5em;
 }
 .flat-table td {
     color: #f7f7f7;
-    padding: 0.7em 1em 0.7em 1.15em;
+    padding: 0.7em 1em 0.7em 10px;
     text-shadow: 0 0 1px rgba(255,255,255,0.1);
     font-size: 1.4em;
 }
