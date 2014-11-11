@@ -7,12 +7,16 @@ Kasa utility functions for discovery, visuals etc..
 (c) 2014 Berk Birand
 
 '''
+#TODO Break this into modules
+
 
 #TODO Load all device drivers (custom import?)
 from devices.wemo import WeMoSwitch
 from devices.sensortag import SensorTag
 
 from devices.utils import raise_msg
+
+from IPython.display import HTML, display_html
 
 # Cache for discovered devices
 devs = []
@@ -21,6 +25,8 @@ def kasa(name):
     ''' Find the device by name'''
     
     #TODO: If device is already created, return that device
+    #TODO: If a second `class` element is given, directly use that
+    #      without looking at the `devs` dict
 
     # Look at all the devices we have in the cache
     for d in devs:
@@ -38,8 +44,6 @@ def kasa(name):
 '''
 def _pretty_print_devs():
     ''' Look at devs and pprint '''
-
-    from IPython.display import HTML
 
     ht = """<div class="discovered"><table class="flat-table flat-table-3">
     <tr>
@@ -80,3 +84,13 @@ def discover(pprint = True):
     #Pretty Print list of devices
     if pprint:
         return _pretty_print_devs()
+
+
+'''
+Styling
+'''
+
+def title(text):
+    if len(text) > 0:
+        return display_html("<h1 class='kasa'>{}</h1>".format(text), raw=True)
+
