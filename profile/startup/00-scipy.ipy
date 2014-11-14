@@ -1,2 +1,3 @@
 %matplotlib inline
 from pylab import *
+from pandas import *
