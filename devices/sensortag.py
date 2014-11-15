@@ -226,7 +226,8 @@ class SensorTagTemperature(ScalarSensorWidget):
         # Run the read command in a thread so that the GUI can be displayed while
         # the values are loading
         #self.read()
-        threading.Thread(target=self.read).start()
+        #threading.Thread(target=self.read).start()
+        self.every(wait=1)
 
     def read(self):
         ''' Return the temperature in Celsius
@@ -285,7 +286,8 @@ class SensorTagHumidity(ScalarSensorWidget):
         # Run the read command in a thread so that the GUI can be displayed while
         # the values are loading
         #self.read()
-        threading.Thread(target=self.read).start()
+        #threading.Thread(target=self.read).start()
+        self.every(wait=1)
 
     def read(self):
         ''' Return the humidity in %
