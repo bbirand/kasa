@@ -20,6 +20,7 @@ class Actor(threading.Thread):
     # cannot exist by the same name.
     # If false, a unique uuid is appended to the name so that the name is
     # always different
+    # This can be overwritten by a subclass
     _unique_actor = True
 
     def __init__(self, name = None, input_address = None, *args, **kwargs):
@@ -35,12 +36,14 @@ class Actor(threading.Thread):
             self.name = self.name + str(uuid.uuid1())
         
         # TODO: Make sure that the name is unique
+        # NOTE: We are recreating the name, just in case
         if self.name in _thread_dict:
             raise ValueError("This name is already taken")
 
         # Store in the global dict
         _thread_dict[self.name] = self
         
+        # NOTE: what if this is not given? Some actors might not take inputs, leave it?
         self._input_address = input_address
         self._out_address = 'inproc://{}/out'.format(self.name)      
         
@@ -51,6 +54,17 @@ class Actor(threading.Thread):
         ''' Adds `other` as a subscriber
         Takes the object as an argument
         '''
+
+        # If a class is given as an argument, initalize first
+        import inspect
+        if inspect.isclass(other):
+            other = other()
+
+        elif callable(other):
+            # Create a new Actor
+            pass
+
+
         # Notify the `other` to connect to itself
         # And starts it
         other._connect_input(input_address = self._out_address)
@@ -93,15 +107,23 @@ class Actor(threading.Thread):
         self.out.bind(self._out_address)  
 
     def main(self):
+        '''
+        Function that takes full control of the input/output.
+        Low-level API
+        '''
         raise NotImplementedError("This must be implemented in subclass")
+
+    def loop(self):
+        '''
+        Take a value from the input at each iteration.
+        Must be a coroutine, so receives the new value using a `yield` call
+        '''
+        raise  NotImplementedError("This can be implemented in subclass")
 
     def cleanup(self):    
         if self._input_address:
             self.inp.close()
         self.out.close()
-
-    def loop(self):
-        raise  NotImplementedError("This can be implemented in subclass")
         
     def run(self):
         '''
@@ -118,6 +140,7 @@ class Actor(threading.Thread):
                 # Start the coroutine
                 gen = self.loop()
                 gen.send(None)
+
                 while True:
                     i = self.inp.recv_pyobj()
                     o = gen.send(i)
@@ -132,7 +155,7 @@ class Actor(threading.Thread):
 '''
 Utility classes
 '''
-class Echo(Actor):
+class echo(Actor):
     '''
     Prints whatever is received, and send it back
     '''
@@ -144,7 +167,7 @@ class Echo(Actor):
             self.msg = msg
         else:
             self.msg = "Received value: {}"
-        super(Echo, self).__init__()
+        super(echo, self).__init__()
 
     def loop(self):
         i = yield
@@ -187,6 +210,22 @@ class Filter(Actor):
             if self.afun(i):
                 print "Outputting {}".format(i)
                 yield i
+
+
+#class print(Actor):
+#    name = "Print"
+#    def __init__(self, fmt):
+#        self.fmt = fmt
+#        super(print, self).__init__(name = "Print_{}".format(fmt))
+#
+#    def main(self):
+#        while True:
+#            if self._stop.is_set():
+#                break
+#            i = self.inp.recv()
+#            print "{}".format(i)
+#            self.out.send(i)            
+
 
 class ReadEvery(Actor):
     '''
