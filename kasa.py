@@ -85,6 +85,12 @@ def discover(pprint = True):
     if pprint:
         return _pretty_print_devs()
 
+'''
+Data Analytics
+'''
+import pandas
+def load(file_name):
+    return pandas.read_pickle(file_name)
 
 '''
 Styling
