@@ -7,7 +7,7 @@ from IPython.html import widgets
 from IPython.utils.traitlets import Bool, Unicode, Float, Int
 from devices.utils import AlignableWidget
 
-from actor import Actor, ReadEvery, Echo
+from actor import Actor, ReadEvery, echo
 
 class WeMoToggle(Actor):
     name = "WeMoToggle"

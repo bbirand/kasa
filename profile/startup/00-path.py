@@ -6,11 +6,11 @@ import sys
 #sys.path.append('{}/../..'.format(cur_folder))
 
 # For testing purposes
-sys.path.append('/Users/berkbirand/')
+#sys.path.append('/Users/wimnet/')
 
 # Import kasa specific code
 #TODO: Change these to relative paths
-sys.path.append('/Users/berkbirand/tmp/kasa')
+sys.path.append('/Users/wimnet/kasa')
 
 from kasa import *
 from devices import *

@@ -1,5 +1,3 @@
-c = get_config()
-
 import os 
 import sys
 
@@ -8,5 +6,5 @@ cur_folder = os.path.dirname(os.path.realpath(__file__))
 sys.path.append('{}/../..'.format(cur_folder))
 
 # Preload some of these
-from kasa import kasa
+from kasa import *
 from devices.sensors import *

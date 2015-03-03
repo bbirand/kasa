@@ -23,10 +23,17 @@ console.log('connected to broker');
 
 currently_connected_devs = {}
 
-// Carry out the action upon receiving data
-socket.on('message', function(client, empty, data) {
-    console.log('From:\'' + client + '\'');
-    console.log('Data:\'' + data   + '\'');
+var queue = async.queue(function(arg, callback) {
+      console.log('Starting processing' + timeStamp());
+      process_msg(arg.client, arg.data);
+      console.log('Done processing' + timeStamp() );
+      callback();
+}, 1);
+
+
+function process_msg(client, data) {
+    // Given client and the data as recieved from the zmq socket, obtain the reading
+
     msg = data.toString().split(' ')
 
     // Discover command
@@ -203,4 +210,43 @@ socket.on('message', function(client, empty, data) {
             break;
     }
 
+}
+
+
+function timeStamp() {
+    return ' - ' + ((new Date()).valueOf() - 1416344387300) ;
+}
+
+// Carry out the action upon receiving data
+socket.on('message', function(client, empty, data) {
+    console.log('From:\'' + client + '\'' + timeStamp() );
+    console.log('Data:\'' + data   + '\'');
+    queue.push({client: client, data: data});
+    console.log('Pushed to queue' + timeStamp());
 });
+
+
+process.stdin.resume();//so the program will not close instantly
+
+function exitHandler(options, err) {
+    if (options.cleanup) {
+        for (var k in currently_connected_devs) {
+            console.log("Disconnecting " + k);
+            currently_connected_devs[k].disconnect();
+        }
+        console.log("Done cleanup");
+    }
+
+    if (err) console.log(err.stack);
+    
+    if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, {exit:true}));

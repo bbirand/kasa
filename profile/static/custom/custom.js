@@ -89,6 +89,9 @@ function simplify_design(){
     // Create CSS rules so that future elements are also affected
     var style = $('<style>div.prompt { display: none; }</style>');
     $('html > head').append(style);
+
+    var style = $('<style>div.discovered { display: none; }</style>');
+    $('html > head').append(style);
 }
 
 function style_home() {

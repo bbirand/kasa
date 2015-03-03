@@ -4,51 +4,64 @@ Base Threaded Actor class
 '''
 import zmq
 import threading
-import time
+import time, types
 import uuid
 
-#TODO: Can make this into a larger Arbiter class with more functionality
-global _thread_dict
-_thread_dict = {}
+from zmq.error import ZMQError
 
 class Actor(threading.Thread):
+    ''' Base Actor class
+
+    Runs in its own thread, and works by using ZMQ queues for input and output
+
+    '''
+    # These variables can be overwritten in subclasses
+
     # String identification of the actor. Should be overwritten in subclass
     # Can also be given to __init__ as an argument
     name = None
 
     # If this is true, then the actor must be unique, and another actor
-    # cannot exist by the same name.
-    # If false, a unique uuid is appended to the name so that the name is
-    # always different
+    # cannot exist by the same name. If false, a unique uuid is appended to the
+    # name so that the name is always different.
     # This can be overwritten by a subclass
     _unique_actor = True
 
-    def __init__(self, name = None, input_address = None, *args, **kwargs):
-        global _thread_dict
+    def __init__(self, loop = None, name = None, input_address = None, *args, **kwargs):
         super(Actor, self).__init__(*args, **kwargs)
         
+        # If loop function was given, use it (instead of subclassing?)
+        # The function's signature has to be loop(self, arg)
+        # TODO: Create a separate dict instead of self, so that functions can't overwrite import values
+        if loop is not None:
+            self.loop = types.MethodType(loop, self)
+            self.name = loop.func_name
+
         # If name was given, overwrite it
         if name:
             self.name = name
 
+        # Input socket
+        # Created upon subscription (or can be created but not connected?)
+        self.inp = None
+
         # If this actor doesn't have to be unique, add a uuid
         if not self._unique_actor:
             self.name = self.name + str(uuid.uuid1())
-        
-        # TODO: Make sure that the name is unique
-        # NOTE: We are recreating the name, just in case
-        if self.name in _thread_dict:
-            raise ValueError("This name is already taken")
 
-        # Store in the global dict
-        _thread_dict[self.name] = self
-        
-        # NOTE: what if this is not given? Some actors might not take inputs, leave it?
-        self._input_address = input_address
-        self._out_address = 'inproc://{}/out'.format(self.name)      
-        
+        # ZMQ Addresses 
+        # Input
+        self._inp_address  =  input_address
+        # Output
+        self._out_address  = 'inproc://{}/out'.format(self.name)      
+        # Control
+        self._ctrl_address = 'inproc://{}/ctrl'.format(self.name) 
+
+        # Used for signaling this thread to stop
+        self._stop = threading.Event()  
+
+        # Store just in cast
         self._kwargs = kwargs
-        self._stop = threading.Event()
         
     def subscribe(self, other):
         ''' Adds `other` as a subscriber
@@ -61,9 +74,8 @@ class Actor(threading.Thread):
             other = other()
 
         elif callable(other):
-            # Create a new Actor
-            pass
-
+            #For callables, create a new Actor
+            other = Actor(other)
 
         # Notify the `other` to connect to itself
         # And starts it
@@ -76,7 +88,12 @@ class Actor(threading.Thread):
         self._stop.set()
     
     def _connect_input(self, input_address = None):
-        self._input_address = input_address
+        '''
+        Notify this actor to connects its input address to the one
+        given as an argument
+
+        '''
+        self._inp_address = input_address
 
         # If input address is not given, do not create socket
         # This behavior might change
@@ -99,12 +116,21 @@ class Actor(threading.Thread):
         self.inp.setsockopt_string(zmq.SUBSCRIBE, u'')
 
     def setup(self):
-        # Connect input if necessary
-        self._connect_input(self._input_address)
+        # Connect input if already given
+        if self._inp_address:
+            self._connect_input(self._inp_address)
 
         c = zmq.Context.instance()
         self.out = c.socket(zmq.PUB)
-        self.out.bind(self._out_address)  
+
+        #NOTE If there are several actors with the same name, this will raise
+        # a zmq.error.ZMQError of 'Address already in use'
+        try:
+            self.out.bind(self._out_address)  
+        except ZMQError, e:
+            print "Cannot start actor {}. Already running".format(self.name)
+            self.stop()
+
 
     def main(self):
         '''
@@ -113,7 +139,7 @@ class Actor(threading.Thread):
         '''
         raise NotImplementedError("This must be implemented in subclass")
 
-    def loop(self):
+    def loop(self, arg):
         '''
         Take a value from the input at each iteration.
         Must be a coroutine, so receives the new value using a `yield` call
@@ -121,7 +147,7 @@ class Actor(threading.Thread):
         raise  NotImplementedError("This can be implemented in subclass")
 
     def cleanup(self):    
-        if self._input_address:
+        if self._inp_address:
             self.inp.close()
         self.out.close()
         
@@ -131,26 +157,66 @@ class Actor(threading.Thread):
         that gets activated when there is an input, and returns the  
         '''
         self.setup()
-        # See if main() is implemented
+
+        # Run main() if implemented
         try:
             self.main()
         except NotImplementedError:
-            # if not, run the loop coroutine
+            # If none is given, run the loop() function (must be implemented)
+            # Stops when the event `_stop` is set
             try:
-                # Start the coroutine
-                gen = self.loop()
-                gen.send(None)
+                while not self._stop.is_set():
+                    #TODO Check control port
 
-                while True:
-                    i = self.inp.recv_pyobj()
-                    o = gen.send(i)
+                    if self.inp is None:
+                        # If no input, run the loop
+                        o = self.loop(None)
+
+                    else:
+                        # Else wait to get a response
+                        i = self.inp.recv_pyobj()
+                        o = self.loop(i)
+
+                    # If we had an output, broadcast to output
                     if o is not None:
                         self.out.send_pyobj(o)
+
             except StopIteration:
                 # if the generator exits, gracefully quit thread
                 pass
         
         self.cleanup()
+
+
+'''
+Convenience functions
+'''
+class ReadEvery(Actor):
+    '''
+    Calls the objects `read()` method every `every` second
+    '''
+    #Doesn't have to be unique for now
+    _unique_actor = False
+
+    def __init__(self, obj, every=5, name=""):
+        '''
+        Argument `name` has to be used carefully
+        '''
+        self.every = every
+        self.obj = obj
+        super(ReadEvery, self).__init__(name = "ReadEvery{}_{}".format(name, every))
+
+    def loop(self, arg):
+        # Read from the object
+        val = self.obj.read()
+
+        # Send to the output
+        # Low-level API accessing self.out socket directly, before returning
+        self.out.send_pyobj(val)
+
+        # Wait for the next loop
+        time.sleep(self.every)
+
 
 '''
 Utility classes
@@ -169,13 +235,11 @@ class echo(Actor):
             self.msg = "Received value: {}"
         super(echo, self).__init__()
 
-    def loop(self):
-        i = yield
-        while True:
-            print self.msg.format(i)    
-            i = yield i
+    def loop(self, arg):
+        print self.msg.format(arg)    
 
-class FilterBool(Actor):
+
+class filterBool(Actor):
     '''
     Gets a value, and then runs the function on it. If the result
     is True, send a boolean to the output
@@ -185,14 +249,13 @@ class FilterBool(Actor):
 
     def __init__(self, afun):
         self.afun = afun
-        super(FilterBool, self).__init__()
+        super(filterBool, self).__init__()
 
-    def loop(self):
-        while True:
-            i = yield
-            yield self.afun(i)
+    def loop(self, arg):
+        return self.afun(arg)
 
-class Filter(Actor):
+
+class filter(Actor):
     '''
     Gets a value, and then runs the function on it. If the result
     is True, send it to the output.
@@ -202,47 +265,12 @@ class Filter(Actor):
 
     def __init__(self, afun):
         self.afun = afun
-        super(Filter, self).__init__()
+        super(filter, self).__init__()
 
-    def loop(self):
-        while True:
-            i = yield
-            if self.afun(i):
-                print "Outputting {}".format(i)
-                yield i
+    def loop(self, arg):
+        if self.afun(arg):
+            return arg
 
-
-#class print(Actor):
-#    name = "Print"
-#    def __init__(self, fmt):
-#        self.fmt = fmt
-#        super(print, self).__init__(name = "Print_{}".format(fmt))
-#
-#    def main(self):
-#        while True:
-#            if self._stop.is_set():
-#                break
-#            i = self.inp.recv()
-#            print "{}".format(i)
-#            self.out.send(i)            
-
-
-class ReadEvery(Actor):
-    '''
-    Calls the objects `read()` method every `every` second
-    '''
-    def __init__(self, obj, every=5):
-        self.every = every
-        self.obj = obj
-        super(ReadEvery, self).__init__(name = "ReadEvery_{}".format(every))
-
-    def main(self):
-        while True:
-            if self._stop.is_set():
-                break
-            val = self.obj.read()
-            self.out.send_pyobj(val)
-            time.sleep(self.every)
 
 '''
 Example Usage

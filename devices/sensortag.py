@@ -10,7 +10,7 @@ from utils import raise_msg
 from IPython.utils.traitlets import Unicode, Float, List
 from sensors import ScalarSensorWidget, TupleSensorWidget
 
-from actor import ReadEvery, Echo
+from actor import ReadEvery, echo
 
 class SensorTag(object):
 
@@ -26,6 +26,9 @@ class SensorTag(object):
                                    'magnetometer' : SensorTagMagnetometer,
                                    'humidity' : SensorTagHumidity,
                                    }
+
+        self.temperature = SensorTagTemperature(self)
+        self.humidity    = SensorTagHumidity(self)
 
     def __getattr__(self, name):
         '''
@@ -165,7 +168,9 @@ class SensorTagMagnetometer(RegularUpdateMixin, TupleSensorWidget):
         threading.Thread(target=self.read).start()
 
     def every(self, wait=5):
-        return ReadEvery(self, wait)
+        t = ReadEvery(self, wait, name="SensorTagMagnetometer")
+        t.start()
+        return t
 
     def _item_hash(self):
         '''
@@ -212,7 +217,7 @@ class SensorTagTemperature(ScalarSensorWidget):
     # Needed for the GUI
     sensor_type = Unicode("Amb. Temp", sync=True)
     sensor_unit = Unicode("&#176;C", sync=True)
-
+    
     def __init__(self, sensortag):
         ''' Construct with the object of the corresponding sensortag '''
         self.sensortag = sensortag
@@ -222,6 +227,9 @@ class SensorTagTemperature(ScalarSensorWidget):
 
         # Whether we have already enabled the sensor
         self._is_enabled = False
+
+        # Holds a reference to the actors, indexed by the frequency
+        self._every_running = {}
 
         # Run the read command in a thread so that the GUI can be displayed while
         # the values are loading
@@ -246,6 +254,12 @@ class SensorTagTemperature(ScalarSensorWidget):
         self.value = float(rval)
         return self.value
 
+    def __gt__(self, other):
+        from numbers import Number
+
+        if isinstance(other, Number):
+            pass
+
     def __or__(self, other):
         ''' Shortcut for Observer pattern
         If the temperature property is used by itself, it is 
@@ -257,8 +271,14 @@ class SensorTagTemperature(ScalarSensorWidget):
     def every(self, wait=5):
         # Save this thread with the wait time
         # Return the same value later on
-        t = ReadEvery(self, wait)
-        t.start()
+
+        # If already running, return a reference to that
+        if wait in self._every_running:
+            t = self._every_running[wait]
+        else:
+            t = ReadEvery(self, wait, name="SensorTagTemperature")
+            t.start()
+            self._every_running[wait] = t
         return t
 
     def _item_hash(self):
@@ -318,7 +338,7 @@ class SensorTagHumidity(ScalarSensorWidget):
     def every(self, wait=5):
         # Save this thread with the wait time
         # Return the same value later on
-        t = ReadEvery(self, wait)
+        t = ReadEvery(self, wait, name="SensorTagHumidity")
         t.start()
         return t
 
